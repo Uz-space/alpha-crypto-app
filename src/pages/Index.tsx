@@ -98,46 +98,48 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Coin list — single column, tag-ma-tag, fits without scroll */}
+          {/* Coin list — single column, wrapped in one elegant frame */}
           <section className="flex-1 min-h-0 px-3 pb-3 overflow-hidden">
-            <div className="h-full grid grid-cols-1 grid-rows-8 gap-1.5">
-              {COINS.map((c, i) => {
-                const live = data[c.id];
-                const isUp = (live?.change24h ?? 0) >= 0;
-                return (
-                  <motion.div
-                    key={c.id}
-                    initial={{ opacity: 0, x: -8 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative overflow-hidden rounded-xl px-3 flex items-center gap-3"
-                  >
-                    <img
-                      src={c.logo}
-                      alt={`${c.name} logo`}
-                      loading="lazy"
-                      className="h-9 w-9 rounded-full object-cover shrink-0"
-                    />
+            <div className="h-full rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] p-2">
+              <div className="h-full grid grid-cols-1 grid-rows-8 gap-0.5">
+                {COINS.map((c, i) => {
+                  const live = data[c.id];
+                  const isUp = (live?.change24h ?? 0) >= 0;
+                  return (
+                    <motion.div
+                      key={c.id}
+                      initial={{ opacity: 0, x: -8 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                      className={`relative px-2.5 flex items-center gap-3 ${i !== COINS.length - 1 ? "border-b border-white/5" : ""}`}
+                    >
+                      <img
+                        src={c.logo}
+                        alt={`${c.name} logo`}
+                        loading="lazy"
+                        className="h-8 w-8 rounded-full object-cover shrink-0"
+                      />
 
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[11px] font-semibold tracking-tight leading-none">{c.name}</div>
-                      <div className="text-[9px] text-muted-foreground tracking-wider mt-0.5">{c.symbol}</div>
-                    </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[11px] font-semibold tracking-tight leading-none">{c.name}</div>
+                        <div className="text-[9px] text-muted-foreground tracking-wider mt-0.5">{c.symbol}</div>
+                      </div>
 
-                    <div className="text-right shrink-0">
-                      <div className="font-display text-[13px] font-semibold tracking-tight tabular-nums leading-none">
-                        ${live ? fmt(live.price) : "—"}
+                      <div className="text-right shrink-0">
+                        <div className="font-display text-[13px] font-semibold tracking-tight tabular-nums leading-none">
+                          ${live ? fmt(live.price) : "—"}
+                        </div>
+                        <div
+                          className="text-[9px] font-semibold tabular-nums mt-1"
+                          style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
+                        >
+                          {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(2)}%` : "—"}
+                        </div>
                       </div>
-                      <div
-                        className="text-[9px] font-semibold tabular-nums mt-1"
-                        style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
-                      >
-                        {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(2)}%` : "—"}
-                      </div>
-                    </div>
-                  </motion.div>
-                );
-              })}
+                    </motion.div>
+                  );
+                })}
+              </div>
             </div>
           </section>
 

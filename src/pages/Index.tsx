@@ -92,19 +92,19 @@ const Index = () => {
             </div>
           </motion.div>
 
-          {/* Coin list (fills remaining viewport) */}
-          <section className="flex-1 min-h-0 px-3 pb-4 overflow-hidden">
-            <div className="h-full grid grid-cols-2 grid-rows-4 gap-1.5">
+          {/* Coin list — single column, tag-ma-tag, fits without scroll */}
+          <section className="flex-1 min-h-0 px-3 pb-3 overflow-hidden">
+            <div className="h-full grid grid-cols-1 grid-rows-8 gap-1.5">
               {COINS.map((c, i) => {
                 const live = data[c.id];
                 const isUp = (live?.change24h ?? 0) >= 0;
                 return (
                   <motion.div
                     key={c.id}
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
+                    initial={{ opacity: 0, x: -8 }}
+                    animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative overflow-hidden rounded-xl bg-gradient-card border border-border px-2.5 py-2 flex items-center gap-2"
+                    className="relative overflow-hidden rounded-xl bg-gradient-card border border-border px-3 flex items-center gap-3"
                   >
                     <div
                       className="h-7 w-7 rounded-lg flex items-center justify-center font-display font-bold text-[11px] text-white shrink-0"
@@ -114,17 +114,19 @@ const Index = () => {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-baseline justify-between gap-1">
-                        <span className="text-[10px] font-semibold tracking-wider">{c.symbol}</span>
-                        <span
-                          className="text-[9px] font-semibold tabular-nums"
-                          style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
-                        >
-                          {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(1)}%` : "—"}
-                        </span>
-                      </div>
-                      <div className="font-display text-[13px] font-semibold tracking-tight tabular-nums truncate">
+                      <div className="text-[11px] font-semibold tracking-tight leading-none">{c.name}</div>
+                      <div className="text-[9px] text-muted-foreground tracking-wider mt-0.5">{c.symbol}</div>
+                    </div>
+
+                    <div className="text-right shrink-0">
+                      <div className="font-display text-[13px] font-semibold tracking-tight tabular-nums leading-none">
                         ${live ? fmt(live.price) : "—"}
+                      </div>
+                      <div
+                        className="text-[9px] font-semibold tabular-nums mt-1"
+                        style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
+                      >
+                        {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(2)}%` : "—"}
                       </div>
                     </div>
                   </motion.div>

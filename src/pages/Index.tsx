@@ -114,14 +114,12 @@ const Index = () => {
                     transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
                     className="relative overflow-hidden rounded-xl bg-gradient-card border border-border px-3 flex items-center gap-3"
                   >
-                    <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 ring-1 ring-border">
-                      <img
-                        src={c.logo}
-                        alt={`${c.name} logo`}
-                        loading="lazy"
-                        className="h-6 w-6 object-contain"
-                      />
-                    </div>
+                    <img
+                      src={c.logo}
+                      alt={`${c.name} logo`}
+                      loading="lazy"
+                      className="h-9 w-9 rounded-full object-cover shrink-0"
+                    />
 
                     <div className="flex-1 min-w-0">
                       <div className="text-[11px] font-semibold tracking-tight leading-none">{c.name}</div>

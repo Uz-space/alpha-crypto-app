@@ -11,14 +11,14 @@ interface Coin {
 }
 
 const COINS: Coin[] = [
-  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png" },
-  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: "https://assets.coingecko.com/coins/images/279/small/ethereum.png" },
-  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png" },
-  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: "https://assets.coingecko.com/coins/images/4128/small/solana.png" },
-  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: "https://assets.coingecko.com/coins/images/2/small/litecoin.png" },
-  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: "https://assets.coingecko.com/coins/images/17980/small/ton_symbol.png" },
-  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: "https://assets.coingecko.com/coins/images/1094/small/tron-logo.png" },
-  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: "https://assets.coingecko.com/coins/images/5/small/dogecoin.png" },
+  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg" },
+  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: "https://cryptologos.cc/logos/ethereum-eth-logo.svg" },
+  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: "https://cryptologos.cc/logos/bnb-bnb-logo.svg" },
+  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: "https://cryptologos.cc/logos/solana-sol-logo.svg" },
+  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: "https://cryptologos.cc/logos/litecoin-ltc-logo.svg" },
+  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: "https://cryptologos.cc/logos/toncoin-ton-logo.svg" },
+  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: "https://cryptologos.cc/logos/tron-trx-logo.svg" },
+  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: "https://cryptologos.cc/logos/dogecoin-doge-logo.svg" },
 ];
 
 const fmt = (n: number) =>
@@ -105,11 +105,13 @@ const Index = () => {
                     transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
                     className="relative overflow-hidden rounded-xl bg-gradient-card border border-border px-3 flex items-center gap-3"
                   >
-                    <div
-                      className="h-7 w-7 rounded-lg flex items-center justify-center font-display font-bold text-[11px] text-white shrink-0"
-                      style={{ background: c.color }}
-                    >
-                      {c.icon}
+                    <div className="h-8 w-8 rounded-full bg-white/5 flex items-center justify-center shrink-0 ring-1 ring-border">
+                      <img
+                        src={c.logo}
+                        alt={`${c.name} logo`}
+                        loading="lazy"
+                        className="h-6 w-6 object-contain"
+                      />
                     </div>
 
                     <div className="flex-1 min-w-0">

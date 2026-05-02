@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { DonateDialog } from "@/components/DonateDialog";
+import { IPhoneFrame } from "@/components/IPhoneFrame";
 
 interface Coin {
   id: string;
@@ -54,95 +55,90 @@ const Index = () => {
   }, []);
 
   return (
-    <main className="h-screen w-full overflow-hidden bg-gradient-hero flex flex-col">
-      {/* Top bar */}
-      <header className="flex items-center justify-between px-6 md:px-10 pt-5 pb-3 shrink-0">
-        <div className="flex items-center gap-2">
-          <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center">
-            <span className="text-background text-xs font-bold">◆</span>
-          </div>
-          <span className="font-display font-semibold tracking-tight text-sm">Crypto Live</span>
-        </div>
+    <main className="h-screen w-full overflow-hidden bg-gradient-hero flex items-center justify-center p-4">
+      <IPhoneFrame>
+        <div className="h-full w-full flex flex-col bg-gradient-hero">
+          {/* Status bar spacer for Dynamic Island */}
+          <div className="h-12 shrink-0" />
 
-        <div className="flex items-center gap-3">
-          <div className="hidden sm:flex items-center gap-2 text-[11px] text-muted-foreground">
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
-            </span>
-            {updatedAt ? updatedAt.toLocaleTimeString("uz-UZ") : "Yuklanmoqda…"}
-          </div>
-          <DonateDialog />
-        </div>
-      </header>
+          {/* Top bar */}
+          <header className="flex items-center justify-between px-4 pb-2 shrink-0">
+            <div className="flex items-center gap-1.5">
+              <div className="h-5 w-5 rounded-md bg-foreground flex items-center justify-center">
+                <span className="text-background text-[9px] font-bold">◆</span>
+              </div>
+              <span className="font-display font-semibold tracking-tight text-[11px]">Crypto Live</span>
+            </div>
 
-      {/* Title */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.7 }}
-        className="text-center px-6 pt-2 pb-4 shrink-0"
-      >
-        <h1 className="font-display text-2xl md:text-4xl font-semibold tracking-tight">
-          Live Crypto Prices
-        </h1>
-        <p className="text-xs md:text-sm text-muted-foreground mt-1">
-          Real vaqtda yangilanadi · CoinGecko
-        </p>
-      </motion.div>
+            <DonateDialog />
+          </header>
 
-      {/* Grid (fills remaining viewport) */}
-      <section className="flex-1 min-h-0 px-4 md:px-10 pb-5">
-        <div className="h-full grid grid-cols-2 md:grid-cols-4 grid-rows-4 md:grid-rows-2 gap-2 md:gap-3">
-          {COINS.map((c, i) => {
-            const live = data[c.id];
-            const isUp = (live?.change24h ?? 0) >= 0;
-            return (
-              <motion.div
-                key={c.id}
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                className="relative overflow-hidden rounded-2xl bg-gradient-card border border-border p-3 md:p-4 flex flex-col justify-between"
-              >
-                <div className="flex items-center justify-between">
-                  <div
-                    className="h-7 w-7 md:h-9 md:w-9 rounded-lg md:rounded-xl flex items-center justify-center font-display font-bold text-xs md:text-sm text-white"
-                    style={{ background: c.color }}
+          {/* Title */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7 }}
+            className="text-center px-4 pt-1 pb-2 shrink-0"
+          >
+            <h1 className="font-display text-xl font-semibold tracking-tight">
+              Live Prices
+            </h1>
+            <div className="flex items-center justify-center gap-1.5 mt-1 text-[10px] text-muted-foreground">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+              </span>
+              {updatedAt ? `Yangilandi ${updatedAt.toLocaleTimeString("uz-UZ")}` : "Yuklanmoqda…"}
+            </div>
+          </motion.div>
+
+          {/* Coin list (fills remaining viewport) */}
+          <section className="flex-1 min-h-0 px-3 pb-4 overflow-hidden">
+            <div className="h-full grid grid-cols-2 grid-rows-4 gap-1.5">
+              {COINS.map((c, i) => {
+                const live = data[c.id];
+                const isUp = (live?.change24h ?? 0) >= 0;
+                return (
+                  <motion.div
+                    key={c.id}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                    className="relative overflow-hidden rounded-xl bg-gradient-card border border-border px-2.5 py-2 flex items-center gap-2"
                   >
-                    {c.icon}
-                  </div>
-                  <span className="text-[10px] md:text-xs font-medium tracking-wider text-muted-foreground">
-                    {c.symbol}
-                  </span>
-                </div>
-
-                <div>
-                  <p className="text-[10px] md:text-xs text-muted-foreground">{c.name}</p>
-                  <div className="flex items-baseline gap-0.5 mt-0.5">
-                    <span className="text-[10px] md:text-xs text-muted-foreground">$</span>
-                    <span className="font-display text-base md:text-2xl font-semibold tracking-tight tabular-nums">
-                      {live ? fmt(live.price) : "—"}
-                    </span>
-                  </div>
-                  <div className="mt-1">
-                    <span
-                      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[9px] md:text-[10px] font-semibold"
-                      style={{
-                        background: isUp ? "hsl(142 71% 55% / 0.12)" : "hsl(0 84% 62% / 0.12)",
-                        color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))",
-                      }}
+                    <div
+                      className="h-7 w-7 rounded-lg flex items-center justify-center font-display font-bold text-[11px] text-white shrink-0"
+                      style={{ background: c.color }}
                     >
-                      <span className="text-[8px]">{isUp ? "▲" : "▼"}</span>
-                      {live ? `${Math.abs(live.change24h).toFixed(2)}%` : "—"}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
+                      {c.icon}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-[10px] font-semibold tracking-wider">{c.symbol}</span>
+                        <span
+                          className="text-[9px] font-semibold tabular-nums"
+                          style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
+                        >
+                          {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(1)}%` : "—"}
+                        </span>
+                      </div>
+                      <div className="font-display text-[13px] font-semibold tracking-tight tabular-nums truncate">
+                        ${live ? fmt(live.price) : "—"}
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+          </section>
+
+          {/* Home indicator */}
+          <div className="shrink-0 flex justify-center pb-2">
+            <div className="h-[5px] w-28 rounded-full bg-foreground/40" />
+          </div>
         </div>
-      </section>
+      </IPhoneFrame>
     </main>
   );
 };

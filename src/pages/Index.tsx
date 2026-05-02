@@ -3,6 +3,15 @@ import { motion } from "framer-motion";
 import { DonateDialog } from "@/components/DonateDialog";
 import { IPhoneFrame } from "@/components/IPhoneFrame";
 
+import btcLogo from "@/assets/coins/btc.png";
+import ethLogo from "@/assets/coins/eth.png";
+import bnbLogo from "@/assets/coins/bnb.png";
+import solLogo from "@/assets/coins/sol.jpeg";
+import ltcLogo from "@/assets/coins/ltc.png";
+import tonLogo from "@/assets/coins/ton.png";
+import trxLogo from "@/assets/coins/trx.png";
+import dogeLogo from "@/assets/coins/doge.jpeg";
+
 interface Coin {
   id: string;
   symbol: string;
@@ -11,14 +20,14 @@ interface Coin {
 }
 
 const COINS: Coin[] = [
-  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: "https://cryptologos.cc/logos/bitcoin-btc-logo.svg" },
-  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: "https://cryptologos.cc/logos/ethereum-eth-logo.svg" },
-  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: "https://cryptologos.cc/logos/bnb-bnb-logo.svg" },
-  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: "https://cryptologos.cc/logos/solana-sol-logo.svg" },
-  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: "https://cryptologos.cc/logos/litecoin-ltc-logo.svg" },
-  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: "https://cryptologos.cc/logos/toncoin-ton-logo.svg" },
-  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: "https://cryptologos.cc/logos/tron-trx-logo.svg" },
-  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: "https://cryptologos.cc/logos/dogecoin-doge-logo.svg" },
+  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: btcLogo },
+  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: ethLogo },
+  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: bnbLogo },
+  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: solLogo },
+  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: ltcLogo },
+  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: tonLogo },
+  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: trxLogo },
+  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: dogeLogo },
 ];
 
 const fmt = (n: number) =>

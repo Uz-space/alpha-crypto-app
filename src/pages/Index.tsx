@@ -108,9 +108,13 @@ const Index = () => {
                   return (
                     <motion.div
                       key={c.id}
-                      initial={{ opacity: 0, x: -8 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
+                      initial={{ opacity: 0, y: 24, scale: 0.92, filter: "blur(8px)" }}
+                      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                      transition={{
+                        duration: 0.7,
+                        delay: 0.25 + i * 0.18,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
                       className={`relative px-1.5 flex items-center gap-2.5 ${i !== COINS.length - 1 ? "border-b border-white/5" : ""}`}
                     >
                       <img

@@ -7,19 +7,18 @@ interface Coin {
   id: string;
   symbol: string;
   name: string;
-  color: string;
-  icon: string;
+  logo: string;
 }
 
 const COINS: Coin[] = [
-  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   icon: "₿", color: "#F7931A" },
-  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  icon: "Ξ", color: "#627EEA" },
-  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       icon: "B", color: "#F3BA2F" },
-  { id: "solana",           symbol: "SOL",  name: "Solana",    icon: "S", color: "#9945FF" },
-  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  icon: "Ł", color: "#345D9D" },
-  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   icon: "T", color: "#0098EA" },
-  { id: "tron",             symbol: "TRX",  name: "TRON",      icon: "T", color: "#FF060A" },
-  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  icon: "Ð", color: "#C2A633" },
+  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: "https://assets.coingecko.com/coins/images/1/small/bitcoin.png" },
+  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: "https://assets.coingecko.com/coins/images/279/small/ethereum.png" },
+  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: "https://assets.coingecko.com/coins/images/825/small/bnb-icon2_2x.png" },
+  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: "https://assets.coingecko.com/coins/images/4128/small/solana.png" },
+  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: "https://assets.coingecko.com/coins/images/2/small/litecoin.png" },
+  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: "https://assets.coingecko.com/coins/images/17980/small/ton_symbol.png" },
+  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: "https://assets.coingecko.com/coins/images/1094/small/tron-logo.png" },
+  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: "https://assets.coingecko.com/coins/images/5/small/dogecoin.png" },
 ];
 
 const fmt = (n: number) =>

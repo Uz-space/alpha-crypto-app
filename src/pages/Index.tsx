@@ -112,7 +112,7 @@ const Index = () => {
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.4, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] }}
-                    className="relative overflow-hidden rounded-xl bg-gradient-card border border-border px-3 flex items-center gap-3"
+                    className="relative overflow-hidden rounded-xl px-3 flex items-center gap-3"
                   >
                     <img
                       src={c.logo}

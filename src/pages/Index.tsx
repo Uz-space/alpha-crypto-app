@@ -31,9 +31,8 @@ const COINS: Coin[] = [
 ];
 
 const fmt = (n: number) =>
-  n >= 1000 ? n.toLocaleString("en-US", { maximumFractionDigits: 0 })
-: n >= 1   ? n.toFixed(2)
-: n.toFixed(4);
+  n >= 1 ? n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+  : n.toLocaleString("en-US", { minimumFractionDigits: 4, maximumFractionDigits: 6 });
 
 const Index = () => {
   const [data, setData] = useState<Record<string, { price: number; change24h: number }>>({});

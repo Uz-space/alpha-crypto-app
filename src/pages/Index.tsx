@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { DonateDialog } from "@/components/DonateDialog";
-import { IPhoneFrame } from "@/components/IPhoneFrame";
+
 
 import btcLogo from "@/assets/coins/btc.png";
 import ethLogo from "@/assets/coins/eth.png";
@@ -61,93 +61,79 @@ const Index = () => {
   }, []);
 
   return (
-    <main className="h-screen w-full overflow-hidden bg-gradient-hero flex items-center justify-center p-4">
-      <IPhoneFrame>
-        <div className="h-full w-full flex flex-col bg-gradient-hero">
-          {/* Status bar spacer for Dynamic Island */}
-          <div className="h-12 shrink-0" />
-
-          {/* Top bar */}
-          <header className="flex items-center justify-between px-4 pb-2 shrink-0">
-            <div className="flex items-center gap-1.5">
-              <div className="h-5 w-5 rounded-md bg-foreground flex items-center justify-center">
-                <span className="text-background text-[9px] font-bold">◆</span>
-              </div>
-              <span className="font-display font-semibold tracking-tight text-[11px]">Crypto Live</span>
+    <main className="min-h-screen w-full bg-gradient-hero">
+      <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
+        {/* Top bar */}
+        <header className="flex items-center justify-between pb-4">
+          <div className="flex items-center gap-2">
+            <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center">
+              <span className="text-background text-xs font-bold">◆</span>
             </div>
-
-            <DonateDialog />
-          </header>
-
-          {/* Status indicator */}
-          <motion.div
-            initial={{ opacity: 0, y: 6 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="flex items-center justify-center gap-1.5 px-4 pb-1.5 text-[9px] text-muted-foreground shrink-0"
-          >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
-            </span>
-            {updatedAt ? `Yangilandi ${updatedAt.toLocaleTimeString("uz-UZ")}` : "Yuklanmoqda…"}
-          </motion.div>
-
-          {/* Coin list — single column, wrapped in one elegant frame */}
-          <section className="flex-1 min-h-0 px-3 pb-2 overflow-hidden">
-            <div className="h-full rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-2 py-1">
-              <div className="h-full grid grid-cols-1 grid-rows-8">
-                {COINS.map((c, i) => {
-                  const live = data[c.id];
-                  const isUp = (live?.change24h ?? 0) >= 0;
-                  return (
-                    <motion.div
-                      key={c.id}
-                      initial={{ opacity: 0, y: 24, scale: 0.92, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
-                      transition={{
-                        duration: 0.7,
-                        delay: 0.25 + i * 0.18,
-                        ease: [0.22, 1, 0.36, 1],
-                      }}
-                      className={`relative px-1.5 flex items-center gap-2.5 ${i !== COINS.length - 1 ? "border-b border-white/5" : ""}`}
-                    >
-                      <img
-                        src={c.logo}
-                        alt={`${c.name} logo`}
-                        loading="lazy"
-                        className="h-6 w-6 rounded-full object-cover shrink-0"
-                      />
-
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[10px] font-semibold tracking-tight leading-none">{c.name}</div>
-                        <div className="text-[8px] text-muted-foreground tracking-wider mt-0.5">{c.symbol}</div>
-                      </div>
-
-                      <div className="text-right shrink-0">
-                        <div className="font-display text-[11px] font-semibold tracking-tight tabular-nums leading-none">
-                          ${live ? fmt(live.price) : "—"}
-                        </div>
-                        <div
-                          className="text-[8px] font-semibold tabular-nums mt-0.5"
-                          style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
-                        >
-                          {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(2)}%` : "—"}
-                        </div>
-                      </div>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
-
-          {/* Home indicator */}
-          <div className="shrink-0 flex justify-center pb-2">
-            <div className="h-[5px] w-28 rounded-full bg-foreground/40" />
+            <span className="font-display font-semibold tracking-tight text-base">Crypto Live</span>
           </div>
-        </div>
-      </IPhoneFrame>
+
+          <DonateDialog />
+        </header>
+
+        {/* Status indicator */}
+        <motion.div
+          initial={{ opacity: 0, y: 6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="flex items-center justify-center gap-2 pb-4 text-xs text-muted-foreground"
+        >
+          <span className="relative flex h-2 w-2">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
+          </span>
+          {updatedAt ? `Yangilandi ${updatedAt.toLocaleTimeString("uz-UZ")}` : "Yuklanmoqda…"}
+        </motion.div>
+
+        {/* Coin list */}
+        <section className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-4 py-2">
+          {COINS.map((c, i) => {
+            const live = data[c.id];
+            const isUp = (live?.change24h ?? 0) >= 0;
+            return (
+              <motion.div
+                key={c.id}
+                initial={{ opacity: 0, y: 24, scale: 0.92, filter: "blur(8px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
+                transition={{
+                  duration: 0.7,
+                  delay: 0.25 + i * 0.18,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                className={`relative py-3 flex items-center gap-3 ${i !== COINS.length - 1 ? "border-b border-white/5" : ""}`}
+              >
+                <img
+                  src={c.logo}
+                  alt={`${c.name} logo`}
+                  loading="lazy"
+                  className="h-9 w-9 rounded-full object-cover shrink-0"
+                />
+
+                <div className="flex-1 min-w-0">
+                  <div className="text-sm font-semibold tracking-tight leading-none">{c.name}</div>
+                  <div className="text-[10px] text-muted-foreground tracking-wider mt-1">{c.symbol}</div>
+                </div>
+
+                <div className="text-right shrink-0">
+                  <div className="font-display text-sm font-semibold tracking-tight tabular-nums leading-none">
+                    ${live ? fmt(live.price) : "—"}
+                  </div>
+                  <div
+                    className="text-[10px] font-semibold tabular-nums mt-1"
+                    style={{ color: isUp ? "hsl(var(--success))" : "hsl(var(--danger))" }}
+                  >
+                    {live ? `${isUp ? "▲" : "▼"} ${Math.abs(live.change24h).toFixed(2)}%` : "—"}
+                  </div>
+                </div>
+              </motion.div>
+            );
+          })}
+        </section>
+      </div>
     </main>
   );
 };

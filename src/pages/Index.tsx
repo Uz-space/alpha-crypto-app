@@ -39,11 +39,11 @@ const Index = () => {
 
   useEffect(() => {
     const ids = COINS.map((c) => c.id).join(",");
-    const url = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
+    const base = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
 
     const run = async () => {
       try {
-        const res = await fetch(url);
+        const res = await fetch(`${base}&_=${Date.now()}`, { cache: "no-store" });
         const json = await res.json();
         const next: typeof data = {};
         for (const c of COINS) {

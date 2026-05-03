@@ -82,26 +82,40 @@ const Index = () => {
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
 
   useEffect(() => {
-    const ids = COINS.map((c) => c.id).join(",");
-    const base = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&precision=full`;
+    let alive = true;
+    let controller: AbortController | null = null;
 
     const run = async () => {
+      controller?.abort();
+      controller = new AbortController();
       try {
-        const res = await fetch(`${base}&_=${Date.now()}`, { cache: "no-store" });
-        const json = await res.json();
-        const next: typeof data = {};
-        for (const c of COINS) {
-          const v = json[c.id];
-          if (v) next[c.id] = { price: v.usd, change24h: v.usd_24h_change ?? 0 };
+        let next = await fetchBinancePrices(controller.signal);
+        if (Object.keys(next).length !== COINS.length) {
+          next = { ...next, ...(await fetchCoinGeckoPrices(controller.signal)) };
         }
-        setData(next);
-        setUpdatedAt(new Date());
-      } catch {}
+        if (alive && Object.keys(next).length) {
+          setData((current) => ({ ...current, ...next }));
+          setUpdatedAt(new Date());
+        }
+      } catch {
+        try {
+          const fallbackController = new AbortController();
+          const next = await fetchCoinGeckoPrices(fallbackController.signal);
+          if (alive && Object.keys(next).length) {
+            setData((current) => ({ ...current, ...next }));
+            setUpdatedAt(new Date());
+          }
+        } catch {}
+      }
     };
 
     run();
-    const id = setInterval(run, 30000);
-    return () => clearInterval(id);
+    const id = setInterval(run, 5000);
+    return () => {
+      alive = false;
+      controller?.abort();
+      clearInterval(id);
+    };
   }, []);
 
   return (

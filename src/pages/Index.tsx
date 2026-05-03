@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { Shield } from "lucide-react";
 import { DonateDialog } from "@/components/DonateDialog";
 
 
@@ -67,9 +68,8 @@ const Index = () => {
         <header className="flex items-center justify-between pb-4">
           <div className="flex items-center gap-2">
             <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center">
-              <span className="text-background text-xs font-bold">◆</span>
+              <Shield className="h-4 w-4 text-background" strokeWidth={2.5} />
             </div>
-            <span className="font-display font-semibold tracking-tight text-base">Crypto Live</span>
           </div>
 
           <DonateDialog />

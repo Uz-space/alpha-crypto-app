@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { DonateDialog } from "@/components/DonateDialog";
-import { IPhoneFrame } from "@/components/IPhoneFrame";
+
 
 import btcLogo from "@/assets/coins/btc.png";
 import ethLogo from "@/assets/coins/eth.png";

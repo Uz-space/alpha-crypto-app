@@ -97,7 +97,8 @@ const Index = () => {
           setData((current) => ({ ...current, ...next }));
           setUpdatedAt(new Date());
         }
-      } catch {
+      } catch (error) {
+        if (!alive || (error instanceof DOMException && error.name === "AbortError")) return;
         try {
           const fallbackController = new AbortController();
           const next = await fetchCoinGeckoPrices(fallbackController.signal);
@@ -105,7 +106,9 @@ const Index = () => {
             setData((current) => ({ ...current, ...next }));
             setUpdatedAt(new Date());
           }
-        } catch {}
+        } catch {
+          return;
+        }
       }
     };
 

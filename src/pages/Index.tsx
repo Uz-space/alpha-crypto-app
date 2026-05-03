@@ -18,24 +18,67 @@ interface Coin {
   symbol: string;
   name: string;
   logo: string;
+  binanceSymbol: string;
 }
 
+type CoinData = Record<string, { price: number; change24h: number }>;
+
 const COINS: Coin[] = [
-  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: btcLogo },
-  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: ethLogo },
-  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: bnbLogo },
-  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: solLogo },
-  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: ltcLogo },
-  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: tonLogo },
-  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: trxLogo },
-  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: dogeLogo },
+  { id: "bitcoin",          symbol: "BTC",  name: "Bitcoin",   logo: btcLogo,  binanceSymbol: "BTCUSDT" },
+  { id: "ethereum",         symbol: "ETH",  name: "Ethereum",  logo: ethLogo,  binanceSymbol: "ETHUSDT" },
+  { id: "binancecoin",      symbol: "BNB",  name: "BNB",       logo: bnbLogo,  binanceSymbol: "BNBUSDT" },
+  { id: "solana",           symbol: "SOL",  name: "Solana",    logo: solLogo,  binanceSymbol: "SOLUSDT" },
+  { id: "litecoin",         symbol: "LTC",  name: "Litecoin",  logo: ltcLogo,  binanceSymbol: "LTCUSDT" },
+  { id: "the-open-network", symbol: "TON",  name: "Toncoin",   logo: tonLogo,  binanceSymbol: "TONUSDT" },
+  { id: "tron",             symbol: "TRX",  name: "TRON",      logo: trxLogo,  binanceSymbol: "TRXUSDT" },
+  { id: "dogecoin",         symbol: "DOGE", name: "Dogecoin",  logo: dogeLogo, binanceSymbol: "DOGEUSDT" },
 ];
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+const fetchBinancePrices = async (signal: AbortSignal): Promise<CoinData> => {
+  const symbols = encodeURIComponent(JSON.stringify(COINS.map((c) => c.binanceSymbol)));
+  const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbols=${symbols}`, {
+    cache: "no-store",
+    signal,
+  });
+  if (!res.ok) throw new Error("Binance price request failed");
+
+  const json: Array<{ symbol: string; lastPrice: string; priceChangePercent: string }> = await res.json();
+  const bySymbol = new Map(json.map((item) => [item.symbol, item]));
+
+  return COINS.reduce<CoinData>((acc, coin) => {
+    const item = bySymbol.get(coin.binanceSymbol);
+    const price = Number(item?.lastPrice);
+    const change24h = Number(item?.priceChangePercent);
+    if (Number.isFinite(price)) {
+      acc[coin.id] = { price, change24h: Number.isFinite(change24h) ? change24h : 0 };
+    }
+    return acc;
+  }, {});
+};
+
+const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
+  const ids = COINS.map((c) => c.id).join(",");
+  const base = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&precision=full`;
+  const res = await fetch(`${base}&_=${Date.now()}`, { cache: "no-store", signal });
+  if (!res.ok) throw new Error("CoinGecko price request failed");
+
+  const json = await res.json();
+  return COINS.reduce<CoinData>((acc, coin) => {
+    const item = json[coin.id];
+    const price = Number(item?.usd);
+    const change24h = Number(item?.usd_24h_change);
+    if (Number.isFinite(price)) {
+      acc[coin.id] = { price, change24h: Number.isFinite(change24h) ? change24h : 0 };
+    }
+    return acc;
+  }, {});
+};
+
 const Index = () => {
-  const [data, setData] = useState<Record<string, { price: number; change24h: number }>>({});
+  const [data, setData] = useState<CoinData>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
 
   useEffect(() => {

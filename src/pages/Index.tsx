@@ -79,23 +79,18 @@ const Index = () => {
             <DonateDialog />
           </header>
 
-          {/* Title */}
+          {/* Status indicator */}
           <motion.div
-            initial={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: 6 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="text-center px-4 pt-1 pb-2 shrink-0"
+            transition={{ duration: 0.5 }}
+            className="flex items-center justify-center gap-1.5 px-4 pb-1.5 text-[9px] text-muted-foreground shrink-0"
           >
-            <h1 className="font-display text-xl font-semibold tracking-tight">
-              Live Prices
-            </h1>
-            <div className="flex items-center justify-center gap-1.5 mt-1 text-[10px] text-muted-foreground">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
-              </span>
-              {updatedAt ? `Yangilandi ${updatedAt.toLocaleTimeString("uz-UZ")}` : "Yuklanmoqda…"}
-            </div>
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+            </span>
+            {updatedAt ? `Yangilandi ${updatedAt.toLocaleTimeString("uz-UZ")}` : "Yuklanmoqda…"}
           </motion.div>
 
           {/* Coin list — single column, wrapped in one elegant frame */}

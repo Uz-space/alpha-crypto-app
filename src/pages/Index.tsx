@@ -67,8 +67,8 @@ const Index = () => {
         {/* Top bar */}
         <header className="flex items-center justify-between pb-4">
           <div className="flex items-center gap-2">
-            <div className="h-7 w-7 rounded-lg bg-foreground flex items-center justify-center">
-              <Shield className="h-4 w-4 text-background" strokeWidth={2.5} />
+            <div className="h-11 w-11 rounded-xl bg-foreground flex items-center justify-center">
+              <Shield className="h-7 w-7 text-background" strokeWidth={2.5} />
             </div>
           </div>
 

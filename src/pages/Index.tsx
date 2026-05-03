@@ -39,7 +39,7 @@ const Index = () => {
 
   useEffect(() => {
     const ids = COINS.map((c) => c.id).join(",");
-    const base = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true`;
+    const base = `https://api.coingecko.com/api/v3/simple/price?ids=${ids}&vs_currencies=usd&include_24hr_change=true&precision=full`;
 
     const run = async () => {
       try {

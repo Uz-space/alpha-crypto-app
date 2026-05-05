@@ -79,7 +79,7 @@ const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
 
 const Index = () => {
   const [data, setData] = useState<CoinData>({});
-  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [, setUpdatedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     let alive = true;

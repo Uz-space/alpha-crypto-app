@@ -195,7 +195,7 @@ const Index = () => {
         </section>
 
         <footer className="mt-8 pb-2 text-center text-[10px] text-muted-foreground leading-relaxed">
-          <p>© 2026 AlphaCrypto. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} AlphaCrypto. All rights reserved.</p>
           <p className="mt-1">Unauthorized copying or reproduction is prohibited.</p>
         </footer>
       </div>

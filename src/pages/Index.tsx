@@ -125,12 +125,25 @@ const Index = () => {
     <main className="min-h-screen w-full bg-gradient-hero">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
         {/* Top bar */}
-        <header className="flex items-center justify-between pb-4">
+        <header className="flex items-center justify-between pb-4 gap-3">
           <div className="flex items-center gap-2">
             <div className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center">
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
             </div>
           </div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+            className="flex items-center gap-1.5 text-[11px] text-muted-foreground"
+          >
+            <span className="relative flex h-1.5 w-1.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+            </span>
+            {updatedAt ? updatedAt.toLocaleTimeString("uz-UZ") : "…"}
+          </motion.div>
 
           <DonateDialog />
         </header>

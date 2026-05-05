@@ -79,7 +79,7 @@ const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
 
 const Index = () => {
   const [data, setData] = useState<CoinData>({});
-  const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [, setUpdatedAt] = useState<Date | null>(null);
 
   useEffect(() => {
     let alive = true;
@@ -127,27 +127,13 @@ const Index = () => {
         {/* Top bar */}
         <header className="flex items-center justify-between pb-4">
           <div className="flex items-center gap-2">
-            <div className="h-11 w-11 rounded-xl bg-foreground flex items-center justify-center">
-              <Shield className="h-7 w-7 text-background" strokeWidth={2.5} />
+            <div className="h-8 w-8 rounded-lg bg-foreground flex items-center justify-center">
+              <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
             </div>
           </div>
 
           <DonateDialog />
         </header>
-
-        {/* Status indicator */}
-        <motion.div
-          initial={{ opacity: 0, y: 6 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-          className="flex items-center justify-center gap-2 pb-4 text-xs text-muted-foreground"
-        >
-          <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-success" />
-          </span>
-          {updatedAt ? `Yangilandi ${updatedAt.toLocaleTimeString("uz-UZ")}` : "Yuklanmoqda…"}
-        </motion.div>
 
         {/* Coin list */}
         <section className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-4 py-2">

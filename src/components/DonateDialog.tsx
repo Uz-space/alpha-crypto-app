@@ -24,12 +24,13 @@ export const DonateDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <motion.button
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.97 }}
-          className="group relative inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-foreground text-background font-medium text-xs shadow-glow transition-shadow hover:shadow-[0_0_30px_hsl(0_0%_100%/0.3)]"
+          whileHover={{ scale: 1.08 }}
+          whileTap={{ scale: 0.94 }}
+          aria-label="Yordam berish"
+          title="Yordam berish"
+          className="group relative inline-flex items-center justify-center h-9 w-9 rounded-full bg-foreground text-background shadow-glow transition-shadow hover:shadow-[0_0_30px_hsl(0_0%_100%/0.3)]"
         >
-          <span className="text-base leading-none">♥</span>
-          Yordam berish
+          <span className="text-base leading-none">💝</span>
         </motion.button>
       </DialogTrigger>
 

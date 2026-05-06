@@ -113,7 +113,7 @@ const Index = () => {
     };
 
     run();
-    const id = setInterval(run, 5000);
+    const id = setInterval(run, 10000);
     return () => {
       alive = false;
       controller?.abort();

@@ -133,17 +133,20 @@ const Index = () => {
           </div>
 
           <motion.div
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-white/10 bg-white/[0.04] backdrop-blur-md text-[10px] font-medium text-muted-foreground shadow-[0_2px_10px_-4px_rgba(0,0,0,0.4)]"
+            className="flex flex-col items-center leading-tight"
           >
-            <span className="relative flex h-1.5 w-1.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-              <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+            <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">
+              Yangilandi
             </span>
-            <span className="tabular-nums tracking-wide">
-              Yangilandi {updatedAt ? updatedAt.toLocaleTimeString("uz-UZ") : "…"}
+            <span className="flex items-center gap-1 text-[12px] font-semibold tabular-nums tracking-tight text-foreground/90 mt-0.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+              </span>
+              {updatedAt ? updatedAt.toLocaleTimeString("uz-UZ") : "…"}
             </span>
           </motion.div>
 

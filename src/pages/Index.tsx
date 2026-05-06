@@ -136,7 +136,8 @@ const Index = () => {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="flex flex-col items-center leading-tight"
+            style={{ borderRadius: "14px" }}
+            className="flex flex-col items-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
           >
             <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">
               Yangilandi

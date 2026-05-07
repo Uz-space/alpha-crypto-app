@@ -35,9 +35,9 @@ export const DonateDialog = () => {
             src={donateIcon}
             alt="Donate"
             loading="lazy"
-            width={20}
-            height={20}
-            className="h-5 w-5 object-contain"
+            width={28}
+            height={28}
+            className="h-7 w-7 object-contain"
             style={{ filter: "invert(1)" }}
           />
         </motion.button>

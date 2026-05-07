@@ -82,6 +82,34 @@ const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
 const Index = () => {
   const [data, setData] = useState<CoinData>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const navigate = useNavigate();
+  const holdTimer = useRef<number | null>(null);
+  const progressTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    supabase.from("visits").insert({
+      path: window.location.pathname,
+      user_agent: navigator.userAgent,
+      referrer: document.referrer || null,
+    }).then(() => {});
+  }, []);
+
+  const startHold = () => {
+    const start = Date.now();
+    progressTimer.current = window.setInterval(() => {
+      setHoldProgress(Math.min(100, ((Date.now() - start) / 4000) * 100));
+    }, 50);
+    holdTimer.current = window.setTimeout(() => {
+      navigate("/auth");
+    }, 4000);
+  };
+
+  const cancelHold = () => {
+    if (holdTimer.current) window.clearTimeout(holdTimer.current);
+    if (progressTimer.current) window.clearInterval(progressTimer.current);
+    setHoldProgress(0);
+  };
 
   useEffect(() => {
     let alive = true;

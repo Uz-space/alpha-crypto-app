@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import donateIcon from "@/assets/donate-icon.png";
+
 
 const WALLETS = [
   { name: "Bitcoin",  symbol: "BTC",  address: "bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", color: "#F7931A" },
@@ -31,15 +31,7 @@ export const DonateDialog = () => {
           title="Yordam berish"
           className="group relative inline-flex items-center justify-center h-9 w-9 rounded-full bg-foreground text-background shadow-glow transition-shadow hover:shadow-[0_0_30px_hsl(0_0%_100%/0.3)]"
         >
-          <img
-            src={donateIcon}
-            alt="Donate"
-            loading="lazy"
-            width={36}
-            height={36}
-            className="h-9 w-9 object-contain"
-            style={{ filter: "invert(1)" }}
-          />
+          <span className="text-lg leading-none">🎁</span>
         </motion.button>
       </DialogTrigger>
 

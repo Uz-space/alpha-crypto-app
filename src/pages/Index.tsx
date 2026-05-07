@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
 import { DonateDialog } from "@/components/DonateDialog";
+import { supabase } from "@/integrations/supabase/client";
 
 
 import btcLogo from "@/assets/coins/btc.png";

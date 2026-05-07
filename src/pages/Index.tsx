@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield } from "lucide-react";
 import { DonateDialog } from "@/components/DonateDialog";
+import { supabase } from "@/integrations/supabase/client";
 
 
 import btcLogo from "@/assets/coins/btc.png";
@@ -80,6 +82,34 @@ const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
 const Index = () => {
   const [data, setData] = useState<CoinData>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
+  const [holdProgress, setHoldProgress] = useState(0);
+  const navigate = useNavigate();
+  const holdTimer = useRef<number | null>(null);
+  const progressTimer = useRef<number | null>(null);
+
+  useEffect(() => {
+    supabase.from("visits").insert({
+      path: window.location.pathname,
+      user_agent: navigator.userAgent,
+      referrer: document.referrer || null,
+    }).then(() => {});
+  }, []);
+
+  const startHold = () => {
+    const start = Date.now();
+    progressTimer.current = window.setInterval(() => {
+      setHoldProgress(Math.min(100, ((Date.now() - start) / 4000) * 100));
+    }, 50);
+    holdTimer.current = window.setTimeout(() => {
+      navigate("/auth");
+    }, 4000);
+  };
+
+  const cancelHold = () => {
+    if (holdTimer.current) window.clearTimeout(holdTimer.current);
+    if (progressTimer.current) window.clearInterval(progressTimer.current);
+    setHoldProgress(0);
+  };
 
   useEffect(() => {
     let alive = true;
@@ -127,9 +157,30 @@ const Index = () => {
         {/* Top bar */}
         <header className="flex items-center justify-between pb-4 gap-3">
           <div className="flex items-center gap-2">
-            <div className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center">
+            <button
+              onPointerDown={startHold}
+              onPointerUp={cancelHold}
+              onPointerLeave={cancelHold}
+              onPointerCancel={cancelHold}
+              onContextMenu={(e) => e.preventDefault()}
+              aria-label="Shield"
+              className="relative h-9 w-9 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
+              style={{ WebkitTapHighlightColor: "transparent" }}
+            >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
-            </div>
+              {holdProgress > 0 && (
+                <svg className="absolute inset-0 -rotate-90 pointer-events-none" viewBox="0 0 36 36">
+                  <circle
+                    cx="18" cy="18" r="17"
+                    fill="none"
+                    stroke="hsl(var(--success))"
+                    strokeWidth="2"
+                    strokeDasharray={`${(holdProgress / 100) * 106.8} 106.8`}
+                    strokeLinecap="round"
+                  />
+                </svg>
+              )}
+            </button>
           </div>
 
           <motion.div

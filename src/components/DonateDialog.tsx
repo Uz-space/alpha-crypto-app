@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import donateIcon from "@/assets/donate-icon.png";
+
 
 const WALLETS = [
   { name: "Bitcoin",  symbol: "BTC",  address: "bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", color: "#F7931A" },

@@ -1,17 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { supabase } from "@/integrations/supabase/client";
 
-
-const WALLETS = [
-  { name: "Bitcoin",  symbol: "BTC",  address: "bc1qxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx", color: "#F7931A" },
-  { name: "Ethereum", symbol: "ETH",  address: "0xYourEthereumAddressHere000000000000000000",  color: "#627EEA" },
-  { name: "USDT (TRC20)", symbol: "USDT", address: "TYourTronUSDTAddressHere000000000000000",  color: "#26A17B" },
-  { name: "TON",      symbol: "TON",  address: "UQYourTonAddressHere000000000000000000000",   color: "#0098EA" },
-];
+interface Wallet {
+  id: string;
+  name: string;
+  symbol: string;
+  address: string;
+  color: string;
+}
 
 export const DonateDialog = () => {
   const [copied, setCopied] = useState<string | null>(null);
+  const [wallets, setWallets] = useState<Wallet[]>([]);
+
+  useEffect(() => {
+    supabase
+      .from("wallets")
+      .select("id,name,symbol,address,color")
+      .order("sort_order")
+      .then(({ data }) => setWallets((data as Wallet[]) ?? []));
+  }, []);
 
   const copy = async (addr: string, sym: string) => {
     try {
@@ -46,9 +56,9 @@ export const DonateDialog = () => {
         </DialogHeader>
 
         <div className="space-y-2 mt-2">
-          {WALLETS.map((w) => (
+          {wallets.map((w) => (
             <button
-              key={w.symbol}
+              key={w.id}
               onClick={() => copy(w.address, w.symbol)}
               className="w-full text-left p-3 rounded-2xl bg-secondary hover:bg-accent border border-border transition-colors group"
             >
@@ -75,10 +85,6 @@ export const DonateDialog = () => {
             </button>
           ))}
         </div>
-
-        <p className="text-[11px] text-muted-foreground text-center mt-2">
-          ⚠️ Manzilni saytdagi adminstratorga sozlatib olishingizni unutmang
-        </p>
       </DialogContent>
     </Dialog>
   );

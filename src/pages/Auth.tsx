@@ -51,7 +51,7 @@ const Auth = () => {
             <Input id="username" type="text" autoComplete="username" required value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="password" className="text-xs">Parol</Label>
+            <Label htmlFor="password" className="text-xs">Password</Label>
             <Input id="password" type="password" autoComplete="current-password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <Button type="submit" disabled={loading} className="w-full">

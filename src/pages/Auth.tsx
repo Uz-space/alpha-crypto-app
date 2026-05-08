@@ -11,7 +11,6 @@ const Auth = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -24,19 +23,9 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      if (mode === "signup") {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-          options: { emailRedirectTo: `${window.location.origin}/admin` },
-        });
-        if (error) throw error;
-        toast.success("Roʻyxatdan oʻtildi. Email tasdiqlang.");
-      } else {
-        const { error } = await supabase.auth.signInWithPassword({ email, password });
-        if (error) throw error;
-        navigate("/admin", { replace: true });
-      }
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      navigate("/admin", { replace: true });
     } catch (err: any) {
       toast.error(err.message ?? "Xatolik");
     } finally {
@@ -65,16 +54,9 @@ const Auth = () => {
             <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "..." : mode === "signin" ? "Kirish" : "Roʻyxatdan oʻtish"}
+            {loading ? "..." : "Kirish"}
           </Button>
         </form>
-
-        <button
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="w-full text-center text-xs text-muted-foreground mt-4 hover:text-foreground transition-colors"
-        >
-          {mode === "signin" ? "Akkaunt yoʻqmi? Roʻyxatdan oʻting" : "Akkauntingiz bormi? Kiring"}
-        </button>
 
         <button
           onClick={() => navigate("/")}

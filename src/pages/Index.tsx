@@ -82,10 +82,8 @@ const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
 const Index = () => {
   const [data, setData] = useState<CoinData>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
-  const [holdProgress, setHoldProgress] = useState(0);
   const navigate = useNavigate();
-  const holdTimer = useRef<number | null>(null);
-  const progressTimer = useRef<number | null>(null);
+  const lastClick = useRef<number>(0);
 
   useEffect(() => {
     supabase.from("visits").insert({
@@ -95,20 +93,14 @@ const Index = () => {
     }).then(() => {});
   }, []);
 
-  const startHold = () => {
-    const start = Date.now();
-    progressTimer.current = window.setInterval(() => {
-      setHoldProgress(Math.min(100, ((Date.now() - start) / 4000) * 100));
-    }, 50);
-    holdTimer.current = window.setTimeout(() => {
+  const handleShieldClick = () => {
+    const now = Date.now();
+    if (now - lastClick.current < 500) {
+      lastClick.current = 0;
       navigate("/auth");
-    }, 4000);
-  };
-
-  const cancelHold = () => {
-    if (holdTimer.current) window.clearTimeout(holdTimer.current);
-    if (progressTimer.current) window.clearInterval(progressTimer.current);
-    setHoldProgress(0);
+    } else {
+      lastClick.current = now;
+    }
   };
 
   useEffect(() => {
@@ -158,28 +150,13 @@ const Index = () => {
         <header className="flex items-center justify-between pb-4 gap-3">
           <div className="flex items-center gap-2">
             <button
-              onPointerDown={startHold}
-              onPointerUp={cancelHold}
-              onPointerLeave={cancelHold}
-              onPointerCancel={cancelHold}
+              onClick={handleShieldClick}
               onContextMenu={(e) => e.preventDefault()}
               aria-label="Shield"
               className="relative h-9 w-9 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
-              {holdProgress > 0 && (
-                <svg className="absolute inset-0 -rotate-90 pointer-events-none" viewBox="0 0 36 36">
-                  <circle
-                    cx="18" cy="18" r="17"
-                    fill="none"
-                    stroke="hsl(var(--success))"
-                    strokeWidth="2"
-                    strokeDasharray={`${(holdProgress / 100) * 106.8} 106.8`}
-                    strokeLinecap="round"
-                  />
-                </svg>
-              )}
             </button>
           </div>
 

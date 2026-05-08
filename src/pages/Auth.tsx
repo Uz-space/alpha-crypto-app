@@ -9,7 +9,7 @@ import { Shield } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -23,6 +23,7 @@ const Auth = () => {
     e.preventDefault();
     setLoading(true);
     try {
+      const email = username.includes("@") ? username : `${username}@admin.local`;
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
       navigate("/admin", { replace: true });
@@ -46,12 +47,12 @@ const Auth = () => {
 
         <form onSubmit={submit} className="space-y-3">
           <div className="space-y-1.5">
-            <Label htmlFor="email" className="text-xs">Email</Label>
-            <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+            <Label htmlFor="username" className="text-xs">Username</Label>
+            <Input id="username" type="text" autoComplete="username" required value={username} onChange={(e) => setUsername(e.target.value)} />
           </div>
           <div className="space-y-1.5">
             <Label htmlFor="password" className="text-xs">Parol</Label>
-            <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
+            <Input id="password" type="password" autoComplete="current-password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? "..." : "Kirish"}

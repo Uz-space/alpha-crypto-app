@@ -24,8 +24,11 @@ const Auth = () => {
     setLoading(true);
     try {
       const email = username.includes("@") ? username : `${username}@admin.local`;
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) throw error;
+      if (data.user) {
+        await supabase.from("login_events").insert({ user_id: data.user.id });
+      }
       navigate("/admin", { replace: true });
     } catch (err: any) {
       toast.error(err.message ?? "Xatolik");

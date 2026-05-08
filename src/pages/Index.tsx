@@ -82,10 +82,8 @@ const fetchCoinGeckoPrices = async (signal: AbortSignal): Promise<CoinData> => {
 const Index = () => {
   const [data, setData] = useState<CoinData>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
-  const [holdProgress, setHoldProgress] = useState(0);
   const navigate = useNavigate();
-  const holdTimer = useRef<number | null>(null);
-  const progressTimer = useRef<number | null>(null);
+  const lastClick = useRef<number>(0);
 
   useEffect(() => {
     supabase.from("visits").insert({

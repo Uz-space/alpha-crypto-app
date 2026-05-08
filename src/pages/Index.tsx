@@ -93,20 +93,14 @@ const Index = () => {
     }).then(() => {});
   }, []);
 
-  const startHold = () => {
-    const start = Date.now();
-    progressTimer.current = window.setInterval(() => {
-      setHoldProgress(Math.min(100, ((Date.now() - start) / 4000) * 100));
-    }, 50);
-    holdTimer.current = window.setTimeout(() => {
+  const handleShieldClick = () => {
+    const now = Date.now();
+    if (now - lastClick.current < 500) {
+      lastClick.current = 0;
       navigate("/auth");
-    }, 4000);
-  };
-
-  const cancelHold = () => {
-    if (holdTimer.current) window.clearTimeout(holdTimer.current);
-    if (progressTimer.current) window.clearInterval(progressTimer.current);
-    setHoldProgress(0);
+    } else {
+      lastClick.current = now;
+    }
   };
 
   useEffect(() => {

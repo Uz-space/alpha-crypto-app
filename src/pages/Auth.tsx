@@ -65,16 +65,9 @@ const Auth = () => {
             <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "..." : mode === "signin" ? "Kirish" : "Roʻyxatdan oʻtish"}
+            {loading ? "..." : "Kirish"}
           </Button>
         </form>
-
-        <button
-          onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-          className="w-full text-center text-xs text-muted-foreground mt-4 hover:text-foreground transition-colors"
-        >
-          {mode === "signin" ? "Akkaunt yoʻqmi? Roʻyxatdan oʻting" : "Akkauntingiz bormi? Kiring"}
-        </button>
 
         <button
           onClick={() => navigate("/")}

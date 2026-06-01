@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      exchange_requests: {
+        Row: {
+          admin_note: string | null
+          created_at: string
+          from_amount: number
+          from_currency: string
+          id: string
+          rate: number | null
+          receive_to_address: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          screenshot_url: string | null
+          sent_to_address: string
+          status: string
+          to_amount: number
+          to_currency: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_note?: string | null
+          created_at?: string
+          from_amount: number
+          from_currency: string
+          id?: string
+          rate?: number | null
+          receive_to_address: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          sent_to_address: string
+          status?: string
+          to_amount: number
+          to_currency: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_note?: string | null
+          created_at?: string
+          from_amount?: number
+          from_currency?: string
+          id?: string
+          rate?: number | null
+          receive_to_address?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          sent_to_address?: string
+          status?: string
+          to_amount?: number
+          to_currency?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       login_events: {
         Row: {
           created_at: string

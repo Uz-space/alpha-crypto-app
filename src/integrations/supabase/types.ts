@@ -14,6 +14,69 @@ export type Database = {
   }
   public: {
     Tables: {
+      exchange_requests: {
+        Row: {
+          admin_note: string | null
+          contact: string | null
+          created_at: string
+          from_amount: number
+          from_currency: string
+          full_name: string | null
+          id: string
+          rate: number | null
+          receive_to_address: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          screenshot_url: string | null
+          sent_to_address: string
+          status: string
+          to_amount: number
+          to_currency: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_note?: string | null
+          contact?: string | null
+          created_at?: string
+          from_amount: number
+          from_currency: string
+          full_name?: string | null
+          id?: string
+          rate?: number | null
+          receive_to_address: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          sent_to_address: string
+          status?: string
+          to_amount: number
+          to_currency: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_note?: string | null
+          contact?: string | null
+          created_at?: string
+          from_amount?: number
+          from_currency?: string
+          full_name?: string | null
+          id?: string
+          rate?: number | null
+          receive_to_address?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          screenshot_url?: string | null
+          sent_to_address?: string
+          status?: string
+          to_amount?: number
+          to_currency?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       login_events: {
         Row: {
           created_at: string

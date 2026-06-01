@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { LogOut, Trash2, Plus, Save, Eye, Users, Wallet as WalletIcon, BarChart3 } from "lucide-react";
+import { LogOut, Trash2, Plus, Save, Eye, Users, Wallet as WalletIcon, BarChart3, Inbox, Check, X, ExternalLink } from "lucide-react";
 
 interface Wallet {
   id: string;
@@ -27,12 +27,29 @@ interface AppUser {
   roles: string[];
 }
 
+interface ExchangeRequest {
+  id: string;
+  from_currency: string;
+  to_currency: string;
+  from_amount: number;
+  to_amount: number;
+  sent_to_address: string;
+  receive_to_address: string;
+  screenshot_url: string | null;
+  status: "pending" | "approved" | "rejected";
+  full_name: string | null;
+  contact: string | null;
+  admin_note: string | null;
+  created_at: string;
+}
+
 const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [users, setUsers] = useState<AppUser[]>([]);
+  const [requests, setRequests] = useState<ExchangeRequest[]>([]);
   const [stats, setStats] = useState({ total: 0, today: 0, week: 0 });
 
   useEffect(() => {
@@ -60,7 +77,7 @@ const Admin = () => {
   }, [navigate]);
 
   const loadAll = async () => {
-    const [{ data: w }, { count: total }, { count: today }, { count: week }, usersRes] = await Promise.all([
+    const [{ data: w }, { count: total }, { count: today }, { count: week }, usersRes, { data: reqs }] = await Promise.all([
       supabase.from("wallets").select("*").order("sort_order"),
       supabase.from("visits").select("*", { count: "exact", head: true }),
       supabase.from("visits").select("*", { count: "exact", head: true })
@@ -68,10 +85,28 @@ const Admin = () => {
       supabase.from("visits").select("*", { count: "exact", head: true })
         .gte("created_at", new Date(Date.now() - 7 * 86400000).toISOString()),
       supabase.functions.invoke("admin-users"),
+      supabase.from("exchange_requests").select("*").order("created_at", { ascending: false }),
     ]);
     setWallets((w as Wallet[]) ?? []);
     setStats({ total: total ?? 0, today: today ?? 0, week: week ?? 0 });
     if (usersRes.data?.users) setUsers(usersRes.data.users);
+    setRequests((reqs as ExchangeRequest[]) ?? []);
+  };
+
+  const reviewRequest = async (id: string, status: "approved" | "rejected") => {
+    const { error } = await supabase
+      .from("exchange_requests")
+      .update({ status, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success(status === "approved" ? "Tasdiqlandi" : "Rad etildi");
+    await loadAll();
+  };
+
+  const deleteRequest = async (id: string) => {
+    const { error } = await supabase.from("exchange_requests").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    await loadAll();
   };
 
   const updateField = (id: string, field: keyof Wallet, value: string | number) => {
@@ -142,12 +177,98 @@ const Admin = () => {
           </div>
         </header>
 
-        <Tabs defaultValue="stats" className="w-full">
-          <TabsList className="grid grid-cols-3 w-full bg-white/[0.04] border border-white/10 mb-6">
-            <TabsTrigger value="stats"><BarChart3 className="h-3.5 w-3.5 mr-1.5" />Statistika</TabsTrigger>
-            <TabsTrigger value="users"><Users className="h-3.5 w-3.5 mr-1.5" />Userlar</TabsTrigger>
-            <TabsTrigger value="wallets"><WalletIcon className="h-3.5 w-3.5 mr-1.5" />Wallets</TabsTrigger>
+        <Tabs defaultValue="requests" className="w-full">
+          <TabsList className="grid grid-cols-4 w-full bg-white/[0.04] border border-white/10 mb-6">
+            <TabsTrigger value="requests" className="relative">
+              <Inbox className="h-3.5 w-3.5 mr-1.5" />Arizalar
+              {requests.filter((r) => r.status === "pending").length > 0 && (
+                <span className="ml-1.5 inline-flex h-4 min-w-4 px-1 items-center justify-center rounded-full bg-danger text-[9px] font-bold text-white">
+                  {requests.filter((r) => r.status === "pending").length}
+                </span>
+              )}
+            </TabsTrigger>
+            <TabsTrigger value="stats"><BarChart3 className="h-3.5 w-3.5" /></TabsTrigger>
+            <TabsTrigger value="users"><Users className="h-3.5 w-3.5" /></TabsTrigger>
+            <TabsTrigger value="wallets"><WalletIcon className="h-3.5 w-3.5" /></TabsTrigger>
           </TabsList>
+
+          {/* REQUESTS */}
+          <TabsContent value="requests" className="mt-0 space-y-3">
+            {requests.length === 0 && (
+              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-8 text-center text-xs text-muted-foreground">
+                Hozircha arizalar yoʻq
+              </div>
+            )}
+            {requests.map((r) => (
+              <div key={r.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                <div className="flex items-start justify-between gap-3 mb-3">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="font-display text-base font-semibold tabular-nums">
+                        {r.from_amount} {r.from_currency}
+                      </span>
+                      <span className="text-muted-foreground/50">→</span>
+                      <span className="font-display text-base font-semibold tabular-nums">
+                        {r.to_amount} {r.to_currency}
+                      </span>
+                    </div>
+                    <div className="text-[10px] text-muted-foreground/70 mt-1">
+                      {fmtDate(r.created_at)} · {r.full_name ?? "—"} · {r.contact ?? "—"}
+                    </div>
+                  </div>
+                  <span
+                    className={`text-[9px] uppercase tracking-wider px-2 py-0.5 rounded-full font-semibold shrink-0 ${
+                      r.status === "pending" ? "bg-amber-500/20 text-amber-400"
+                      : r.status === "approved" ? "bg-success/20 text-success"
+                      : "bg-danger/20 text-danger"
+                    }`}
+                  >
+                    {r.status}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 gap-2 text-xs mb-3">
+                  <div className="rounded-lg bg-background/40 border border-white/5 p-2">
+                    <div className="text-[9px] uppercase tracking-wider text-muted-foreground/60">User yuborgan manzil ({r.from_currency})</div>
+                    <div className="font-mono text-[11px] break-all mt-0.5">{r.sent_to_address}</div>
+                  </div>
+                  <div className="rounded-lg bg-background/40 border border-white/5 p-2">
+                    <div className="text-[9px] uppercase tracking-wider text-muted-foreground/60">User qabul qilmoqchi ({r.to_currency})</div>
+                    <div className="font-mono text-[11px] break-all mt-0.5">{r.receive_to_address}</div>
+                  </div>
+                </div>
+
+                {r.screenshot_url && (
+                  <a href={r.screenshot_url} target="_blank" rel="noreferrer" className="block mb-3 group">
+                    <div className="relative rounded-lg overflow-hidden border border-white/10">
+                      <img src={r.screenshot_url} alt="screenshot" className="w-full max-h-64 object-contain bg-background/50" />
+                      <div className="absolute top-2 right-2 bg-background/80 backdrop-blur rounded-md px-2 py-1 text-[10px] flex items-center gap-1 opacity-0 group-hover:opacity-100 transition">
+                        <ExternalLink className="h-3 w-3" /> Ochish
+                      </div>
+                    </div>
+                  </a>
+                )}
+
+                {r.status === "pending" ? (
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => reviewRequest(r.id, "rejected")} className="flex-1">
+                      <X className="h-3.5 w-3.5 mr-1" /> Rad etish
+                    </Button>
+                    <Button size="sm" onClick={() => reviewRequest(r.id, "approved")} className="flex-1 bg-success text-background hover:bg-success/90">
+                      <Check className="h-3.5 w-3.5 mr-1" /> Tasdiqlash
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex justify-end">
+                    <Button size="sm" variant="ghost" onClick={() => deleteRequest(r.id)}>
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </TabsContent>
+
 
           {/* STATS */}
           <TabsContent value="stats" className="space-y-4 mt-0">

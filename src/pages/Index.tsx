@@ -145,7 +145,7 @@ const Index = () => {
 
   return (
     <main className="min-h-screen w-full bg-gradient-hero flex">
-      <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6 pb-10">
+      <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
         {/* Top bar */}
         <header className="flex items-center justify-between pb-4 gap-3">
           <div className="flex items-center gap-2">
@@ -183,7 +183,7 @@ const Index = () => {
         </header>
 
         {/* Coin list */}
-        <section className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-4 py-2 mb-6">
+        <section className="flex-1 flex flex-col justify-around rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-4 py-2">
           {COINS.map((c, i) => {
             const live = data[c.id];
             const isUp = (live?.change24h ?? 0) >= 0;

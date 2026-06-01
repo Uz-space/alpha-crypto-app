@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { LogOut, Trash2, Plus, Save, Eye, Users, Wallet as WalletIcon, BarChart3 } from "lucide-react";
+import { LogOut, Trash2, Plus, Save, Eye, Users, Wallet as WalletIcon, BarChart3, Inbox, Check, X, ExternalLink } from "lucide-react";
 
 interface Wallet {
   id: string;
@@ -27,12 +27,29 @@ interface AppUser {
   roles: string[];
 }
 
+interface ExchangeRequest {
+  id: string;
+  from_currency: string;
+  to_currency: string;
+  from_amount: number;
+  to_amount: number;
+  sent_to_address: string;
+  receive_to_address: string;
+  screenshot_url: string | null;
+  status: "pending" | "approved" | "rejected";
+  full_name: string | null;
+  contact: string | null;
+  admin_note: string | null;
+  created_at: string;
+}
+
 const Admin = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [authorized, setAuthorized] = useState(false);
   const [wallets, setWallets] = useState<Wallet[]>([]);
   const [users, setUsers] = useState<AppUser[]>([]);
+  const [requests, setRequests] = useState<ExchangeRequest[]>([]);
   const [stats, setStats] = useState({ total: 0, today: 0, week: 0 });
 
   useEffect(() => {
@@ -60,7 +77,7 @@ const Admin = () => {
   }, [navigate]);
 
   const loadAll = async () => {
-    const [{ data: w }, { count: total }, { count: today }, { count: week }, usersRes] = await Promise.all([
+    const [{ data: w }, { count: total }, { count: today }, { count: week }, usersRes, { data: reqs }] = await Promise.all([
       supabase.from("wallets").select("*").order("sort_order"),
       supabase.from("visits").select("*", { count: "exact", head: true }),
       supabase.from("visits").select("*", { count: "exact", head: true })
@@ -68,10 +85,28 @@ const Admin = () => {
       supabase.from("visits").select("*", { count: "exact", head: true })
         .gte("created_at", new Date(Date.now() - 7 * 86400000).toISOString()),
       supabase.functions.invoke("admin-users"),
+      supabase.from("exchange_requests").select("*").order("created_at", { ascending: false }),
     ]);
     setWallets((w as Wallet[]) ?? []);
     setStats({ total: total ?? 0, today: today ?? 0, week: week ?? 0 });
     if (usersRes.data?.users) setUsers(usersRes.data.users);
+    setRequests((reqs as ExchangeRequest[]) ?? []);
+  };
+
+  const reviewRequest = async (id: string, status: "approved" | "rejected") => {
+    const { error } = await supabase
+      .from("exchange_requests")
+      .update({ status, reviewed_at: new Date().toISOString() })
+      .eq("id", id);
+    if (error) return toast.error(error.message);
+    toast.success(status === "approved" ? "Tasdiqlandi" : "Rad etildi");
+    await loadAll();
+  };
+
+  const deleteRequest = async (id: string) => {
+    const { error } = await supabase.from("exchange_requests").delete().eq("id", id);
+    if (error) return toast.error(error.message);
+    await loadAll();
   };
 
   const updateField = (id: string, field: keyof Wallet, value: string | number) => {

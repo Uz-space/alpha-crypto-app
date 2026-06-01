@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Shield } from "lucide-react";
+import { Shield, ArrowRightLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import { DonateDialog } from "@/components/DonateDialog";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -226,6 +227,14 @@ const Index = () => {
             );
           })}
         </section>
+
+        <Link
+          to="/exchange"
+          className="mt-4 flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-foreground text-background py-3.5 font-semibold text-sm tracking-tight hover:opacity-90 transition shadow-[0_8px_30px_-12px_rgba(255,255,255,0.3)]"
+        >
+          <ArrowRightLeft className="h-4 w-4" />
+          Exchange — Crypto ↔ UZS
+        </Link>
 
       </div>
     </main>

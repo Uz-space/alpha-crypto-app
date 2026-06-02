@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      exchange_rates: {
+        Row: {
+          id: string
+          price_uzs: number
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          price_uzs: number
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          id?: string
+          price_uzs?: number
+          symbol?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       exchange_requests: {
         Row: {
           admin_note: string | null
@@ -74,6 +95,39 @@ export type Database = {
           to_currency?: string
           updated_at?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      exchange_wallets: {
+        Row: {
+          address: string
+          created_at: string
+          id: string
+          name: string
+          network: string | null
+          sort_order: number
+          symbol: string
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          created_at?: string
+          id?: string
+          name: string
+          network?: string | null
+          sort_order?: number
+          symbol: string
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          created_at?: string
+          id?: string
+          name?: string
+          network?: string | null
+          sort_order?: number
+          symbol?: string
+          updated_at?: string
         }
         Relationships: []
       }

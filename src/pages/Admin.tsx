@@ -12,7 +12,7 @@ import {
 
 interface Wallet { id: string; name: string; symbol: string; address: string; color: string; sort_order: number; }
 interface ExchWallet { id: string; name: string; symbol: string; address: string; network: string | null; sort_order: number; }
-interface Rate { id: string; symbol: string; price_uzs: number; }
+interface Rate { id: string; symbol: string; buy_uzs: number; sell_uzs: number; sort_order: number; }
 interface AppUser {
   id: string; username: string; email: string; last_sign_in_at: string | null;
   created_at: string; total_logins: number; today_logins: number; roles: string[];
@@ -58,7 +58,7 @@ const Admin = () => {
     const [w, ew, r, total, today, week, usersRes, reqs] = await Promise.all([
       supabase.from("wallets").select("*").order("sort_order"),
       supabase.from("exchange_wallets").select("*").order("sort_order"),
-      supabase.from("exchange_rates").select("*").order("symbol"),
+      supabase.from("exchange_rates").select("*").order("sort_order"),
       supabase.from("visits").select("*", { count: "exact", head: true }),
       supabase.from("visits").select("*", { count: "exact", head: true })
         .gte("created_at", new Date(new Date().setHours(0,0,0,0)).toISOString()),
@@ -120,15 +120,18 @@ const Admin = () => {
   };
 
   // ----- Rates -----
-  const upR = (id: string, v: number) => setRates(rs => rs.map(r => r.id===id ? {...r, price_uzs: v}:r));
+  const upR = (id: string, f: "buy_uzs" | "sell_uzs", v: number) =>
+    setRates(rs => rs.map(r => r.id===id ? {...r, [f]: v}:r));
   const saveR = async (r: Rate) => {
-    const { error } = await supabase.from("exchange_rates").update({ price_uzs: r.price_uzs }).eq("id", r.id);
+    const { error } = await supabase.from("exchange_rates")
+      .update({ buy_uzs: r.buy_uzs, sell_uzs: r.sell_uzs }).eq("id", r.id);
     error ? toast.error(error.message) : toast.success(`${r.symbol} kursi yangilandi`);
   };
   const addR = async () => {
     const sym = prompt("Valyuta belgisi (masalan: BTC)")?.trim().toUpperCase();
     if (!sym) return;
-    const { error } = await supabase.from("exchange_rates").insert({ symbol: sym, price_uzs: 1 });
+    const { error } = await supabase.from("exchange_rates")
+      .insert({ symbol: sym, buy_uzs: 0, sell_uzs: 0, price_uzs: 0, sort_order: 99 });
     if (error) toast.error(error.message);
     else await loadAll();
   };
@@ -242,20 +245,29 @@ const Admin = () => {
               <div className="flex items-center justify-between mb-4">
                 <div>
                   <h2 className="text-sm font-semibold">Valyuta kurslari</h2>
-                  <p className="text-[10px] text-muted-foreground/70 mt-0.5">1 birlik = X soʻm</p>
+                  <p className="text-[10px] text-muted-foreground/70 mt-0.5">
+                    Olish (user sotadi) va Sotish (user oladi) — 1 birlik = UZS
+                  </p>
                 </div>
                 <Button size="sm" variant="outline" onClick={addR}><Plus className="h-3.5 w-3.5 mr-1" /> Qoʻshish</Button>
               </div>
+              <div className="grid grid-cols-[3rem_1fr_1fr_auto_auto] gap-2 text-[10px] uppercase tracking-wider text-muted-foreground/60 px-2 mb-1">
+                <div></div>
+                <div>Olish (Buy)</div>
+                <div>Sotish (Sell)</div>
+                <div></div>
+                <div></div>
+              </div>
               <div className="space-y-2">
                 {rates.map((r) => (
-                  <div key={r.id} className="flex items-center gap-2 rounded-xl border border-white/5 bg-background/30 p-2">
-                    <div className="w-16 px-2 py-1.5 rounded-lg bg-foreground/10 text-xs font-semibold text-center">{r.symbol}</div>
-                    <Input type="number" value={r.price_uzs} onChange={(e) => upR(r.id, Number(e.target.value))} className="flex-1 tabular-nums" />
-                    <span className="text-[10px] text-muted-foreground/70">UZS</span>
+                  <div key={r.id} className="grid grid-cols-[3rem_1fr_1fr_auto_auto] items-center gap-2 rounded-xl border border-white/5 bg-background/30 p-2">
+                    <div className="px-2 py-1.5 rounded-lg bg-foreground/10 text-xs font-semibold text-center">{r.symbol}</div>
+                    <Input type="number" value={r.buy_uzs} onChange={(e) => upR(r.id, "buy_uzs", Number(e.target.value))} className="tabular-nums" />
+                    <Input type="number" value={r.sell_uzs} onChange={(e) => upR(r.id, "sell_uzs", Number(e.target.value))} className="tabular-nums" />
                     <Button size="sm" onClick={() => saveR(r)}><Save className="h-3.5 w-3.5" /></Button>
-                    {r.symbol !== "UZS" && (
+                    {r.symbol !== "UZS" ? (
                       <Button size="sm" variant="ghost" onClick={() => delR(r.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
-                    )}
+                    ) : <div className="w-9" />}
                   </div>
                 ))}
               </div>

@@ -31,17 +31,16 @@ const ASSETS: Asset[] = [
 ];
 
 interface ExchWallet { symbol: string; name: string; address: string; network: string | null; }
+interface Rate { symbol: string; buy_uzs: number; sell_uzs: number; }
 
 const Exchange = () => {
-  const [rates, setRates] = useState<Record<string, number>>({});
+  const [rates, setRates] = useState<Record<string, Rate>>({});
   const [wallets, setWallets] = useState<ExchWallet[]>([]);
   const [from, setFrom] = useState("UZS");
   const [to, setTo] = useState("BTC");
   const [fromAmount, setFromAmount] = useState("");
   const [toAmount, setToAmount] = useState("");
   const [receiveAddr, setReceiveAddr] = useState("");
-  const [fullName, setFullName] = useState("");
-  const [contact, setContact] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -50,20 +49,29 @@ const Exchange = () => {
     supabase.from("exchange_wallets").select("symbol,name,address,network").then(({ data }) => {
       setWallets((data ?? []) as ExchWallet[]);
     });
-    supabase.from("exchange_rates").select("symbol,price_uzs").then(({ data }) => {
-      const m: Record<string, number> = {};
-      (data ?? []).forEach((r: any) => { m[r.symbol] = Number(r.price_uzs); });
+    supabase.from("exchange_rates").select("symbol,buy_uzs,sell_uzs").then(({ data }) => {
+      const m: Record<string, Rate> = {};
+      (data ?? []).forEach((r: any) => {
+        m[r.symbol] = { symbol: r.symbol, buy_uzs: Number(r.buy_uzs), sell_uzs: Number(r.sell_uzs) };
+      });
       setRates(m);
     });
   }, []);
 
+  // Active rate: when user gives UZS (buys crypto) → use sell_uzs. When user gives crypto (sells crypto for UZS) → use buy_uzs.
+  const activeRate = useMemo(() => {
+    const crypto = from === "UZS" ? to : from;
+    const r = rates[crypto];
+    if (!r) return 0;
+    return from === "UZS" ? r.sell_uzs : r.buy_uzs;
+  }, [from, to, rates]);
+
   useEffect(() => {
     const amt = parseFloat(fromAmount);
-    const pf = rates[from], pt = rates[to];
-    if (!isFinite(amt) || amt <= 0 || !pf || !pt) { setToAmount(""); return; }
-    const out = (amt * pf) / pt;
+    if (!isFinite(amt) || amt <= 0 || !activeRate) { setToAmount(""); return; }
+    const out = from === "UZS" ? amt / activeRate : amt * activeRate;
     setToAmount(to === "UZS" ? out.toFixed(0) : out.toFixed(8));
-  }, [fromAmount, from, to, rates]);
+  }, [fromAmount, from, to, activeRate]);
 
   const swap = () => { setFrom(to); setTo(from); setFromAmount(toAmount); };
   const validPair = (from === "UZS") !== (to === "UZS");
@@ -80,10 +88,8 @@ const Exchange = () => {
     if (!validPair) return toast.error("Faqat crypto ↔ UZS");
     if (!fromAmount || !toAmount) return toast.error("Summalarni kiriting");
     if (!receiveAddr.trim()) return toast.error("Qabul qilish manzilini kiriting");
-    if (!fullName.trim()) return toast.error("Ism familiyangizni kiriting");
-    if (!contact.trim()) return toast.error("Aloqa maʼlumotini kiriting");
     if (!file) return toast.error("Toʻlov screenshotini yuklang");
-    if (!sendToWallet) return toast.error(`${from} uchun manzil yoʻq. Admin bilan bogʻlaning`);
+    if (!sendToWallet) return toast.error(`${from} uchun manzil yoʻq`);
 
     setSubmitting(true);
     try {
@@ -99,16 +105,14 @@ const Exchange = () => {
         to_currency: to,
         from_amount: Number(fromAmount),
         to_amount: Number(toAmount),
+        rate: activeRate,
         sent_to_address: sendToWallet.address,
         receive_to_address: receiveAddr.trim(),
         screenshot_url: pub.publicUrl,
-        full_name: fullName.trim(),
-        contact: contact.trim(),
       });
       if (error) throw error;
-      toast.success("Ariza qabul qilindi! Admin tez orada koʻrib chiqadi.");
-      setFromAmount(""); setToAmount(""); setReceiveAddr("");
-      setFullName(""); setContact(""); setFile(null);
+      toast.success("Ariza qabul qilindi!");
+      setFromAmount(""); setToAmount(""); setReceiveAddr(""); setFile(null);
     } catch (e: any) {
       toast.error(e.message ?? "Xatolik");
     } finally {
@@ -159,29 +163,33 @@ const Exchange = () => {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="flex-1 rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] p-4 space-y-4"
+          className="rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] p-4 space-y-3"
         >
-          {/* From */}
           <div>
-            <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-2">Yuboraman</div>
+            <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-2">Beraman</div>
             <AssetPicker value={from} onChange={(s) => { if (s === to) setTo(from); setFrom(s); }} exclude={to !== "UZS" && from !== "UZS" ? to : undefined} />
             <Input type="number" inputMode="decimal" placeholder="0.00" value={fromAmount}
-              onChange={(e) => setFromAmount(e.target.value)} className="mt-2 h-12 text-lg font-display tabular-nums" />
+              onChange={(e) => setFromAmount(e.target.value)} className="mt-2 h-11 text-base font-display tabular-nums" />
           </div>
 
           <div className="flex justify-center">
-            <button onClick={swap} className="h-9 w-9 rounded-full bg-foreground/10 border border-white/10 hover:bg-foreground/20 flex items-center justify-center transition">
-              <ArrowRightLeft className="h-4 w-4 rotate-90" />
+            <button onClick={swap} className="h-8 w-8 rounded-full bg-foreground/10 border border-white/10 hover:bg-foreground/20 flex items-center justify-center transition">
+              <ArrowRightLeft className="h-3.5 w-3.5 rotate-90" />
             </button>
           </div>
 
-          {/* To */}
           <div>
             <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-2">Olaman</div>
             <AssetPicker value={to} onChange={(s) => { if (s === from) setFrom(to); setTo(s); }} exclude={from !== "UZS" && to !== "UZS" ? from : undefined} />
             <Input type="number" inputMode="decimal" placeholder="0.00" value={toAmount} readOnly
-              className="mt-2 h-12 text-lg font-display tabular-nums opacity-90" />
+              className="mt-2 h-11 text-base font-display tabular-nums opacity-90" />
           </div>
+
+          {validPair && activeRate > 0 && (
+            <div className="text-[10px] text-muted-foreground/70 text-center tabular-nums">
+              Kurs: 1 {from === "UZS" ? to : from} = {activeRate.toLocaleString("uz-UZ")} UZS
+            </div>
+          )}
 
           {!validPair && (
             <div className="rounded-xl border border-danger/30 bg-danger/10 p-3 text-xs text-danger">
@@ -190,9 +198,7 @@ const Exchange = () => {
           )}
 
           {validPair && sendToWallet && (
-            <>
-              <div className="h-px bg-white/5" />
-
+            <div className="space-y-3 pt-1">
               <div>
                 <div className="text-[10px] uppercase tracking-[0.18em] text-muted-foreground/70 mb-1.5">
                   {from === "UZS" ? "Karta raqamiga toʻlang" : `${from} manziliga yuboring`}
@@ -219,17 +225,6 @@ const Exchange = () => {
                   className="mt-1 font-mono text-xs" />
               </div>
 
-              <div className="grid grid-cols-2 gap-2">
-                <div>
-                  <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/70">Ism familiya</Label>
-                  <Input value={fullName} onChange={(e) => setFullName(e.target.value)} placeholder="Ali Valiyev" className="mt-1" />
-                </div>
-                <div>
-                  <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/70">Telegram / Tel</Label>
-                  <Input value={contact} onChange={(e) => setContact(e.target.value)} placeholder="@username" className="mt-1" />
-                </div>
-              </div>
-
               <div>
                 <Label className="text-[10px] uppercase tracking-[0.15em] text-muted-foreground/70">Toʻlov screenshoti</Label>
                 <label className="mt-1 flex items-center gap-2 rounded-xl border border-dashed border-white/15 bg-background/30 px-3 py-3 cursor-pointer hover:border-white/30 transition">
@@ -245,12 +240,12 @@ const Exchange = () => {
               <Button onClick={submit} disabled={submitting} className="w-full h-11 font-semibold">
                 {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : "Arizani yuborish"}
               </Button>
-            </>
+            </div>
           )}
 
           {validPair && !sendToWallet && (
             <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3 text-xs text-amber-300">
-              {from} uchun admin manzilni hali sozlamagan. Iltimos boshqa valyutani tanlang.
+              {from} uchun admin manzilni hali sozlamagan.
             </div>
           )}
         </motion.section>

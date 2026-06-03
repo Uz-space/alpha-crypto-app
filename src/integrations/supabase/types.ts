@@ -16,20 +16,29 @@ export type Database = {
     Tables: {
       exchange_rates: {
         Row: {
+          buy_uzs: number
           id: string
           price_uzs: number
+          sell_uzs: number
+          sort_order: number
           symbol: string
           updated_at: string
         }
         Insert: {
+          buy_uzs?: number
           id?: string
           price_uzs: number
+          sell_uzs?: number
+          sort_order?: number
           symbol: string
           updated_at?: string
         }
         Update: {
+          buy_uzs?: number
           id?: string
           price_uzs?: number
+          sell_uzs?: number
+          sort_order?: number
           symbol?: string
           updated_at?: string
         }

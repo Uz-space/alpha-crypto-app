@@ -142,23 +142,32 @@ const Index = () => {
   return (
     <main className="min-h-screen w-full bg-gradient-hero flex">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
-        <header className="flex items-center justify-between pb-4 gap-3">
-          <button
-            onClick={handleShieldClick}
-            onContextMenu={(e) => e.preventDefault()}
-            aria-label="Shield"
-            className="relative h-9 w-9 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
-            style={{ WebkitTapHighlightColor: "transparent" }}
-          >
-            <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
-          </button>
+        <header className="flex items-center justify-between pb-4 gap-3 relative">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={handleShieldClick}
+              onContextMenu={(e) => e.preventDefault()}
+              aria-label="Shield"
+              className="relative h-9 w-9 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
+              style={{ WebkitTapHighlightColor: "transparent" }}
+            >
+              <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={handleAuthClick}
+              aria-label={authed ? "Logout" : "Login"}
+              className="h-9 w-9 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center transition"
+            >
+              {authed ? <LogOut className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
+            </button>
+          </div>
 
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
             style={{ borderRadius: "14px" }}
-            className="flex flex-col items-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
+            className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
           >
             <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">Yangilandi</span>
             <span className="flex items-center gap-1 text-[12px] font-semibold tabular-nums tracking-tight text-foreground/90 mt-0.5">
@@ -179,13 +188,6 @@ const Index = () => {
               <ArrowRightLeft className="h-4 w-4" />
             </Link>
             <DonateDialog />
-            <button
-              onClick={handleAuthClick}
-              aria-label={authed ? "Logout" : "Login"}
-              className="h-9 w-9 rounded-full border border-white/10 bg-white/[0.04] hover:bg-white/[0.08] flex items-center justify-center transition"
-            >
-              {authed ? <LogOut className="h-4 w-4" /> : <LogIn className="h-4 w-4" />}
-            </button>
           </div>
         </header>
 

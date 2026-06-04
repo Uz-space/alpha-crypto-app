@@ -142,7 +142,7 @@ const Index = () => {
   return (
     <main className="min-h-screen w-full bg-gradient-hero flex">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
-        <header className="flex items-center justify-between pb-4 gap-3 relative">
+        <header className="grid grid-cols-3 items-center pb-4 gap-3">
           <div className="flex items-center gap-2 relative z-10">
             <button
               onClick={handleShieldClick}
@@ -171,7 +171,7 @@ const Index = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
             style={{ borderRadius: "14px" }}
-            className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
+            className="flex flex-col items-center justify-self-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
           >
             <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">Yangilandi</span>
             <span className="flex items-center gap-1 text-[12px] font-semibold tabular-nums tracking-tight text-foreground/90 mt-0.5">
@@ -183,7 +183,7 @@ const Index = () => {
             </span>
           </motion.div>
 
-          <div className="flex items-center gap-2 ml-auto relative z-10">
+          <div className="flex items-center gap-2 justify-end relative z-10">
             <Link
               to="/exchange"
               aria-label="Exchange"
@@ -193,7 +193,6 @@ const Index = () => {
             </Link>
             <DonateDialog />
           </div>
-
         </header>
 
         <section className="flex-1 flex flex-col justify-around rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-4 py-2">

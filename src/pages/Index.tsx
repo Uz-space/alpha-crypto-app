@@ -143,7 +143,7 @@ const Index = () => {
     <main className="min-h-screen w-full bg-gradient-hero flex">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
         <header className="flex items-center justify-between pb-4 gap-3 relative">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 relative z-10">
             <button
               onClick={handleShieldClick}
               onContextMenu={(e) => e.preventDefault()}
@@ -152,6 +152,17 @@ const Index = () => {
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
+            </button>
+            <button
+              onClick={handleAuthClick}
+              aria-label={authed ? "Logout" : "Login"}
+              className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center transition"
+            >
+              {authed ? (
+                <LogOut className="h-5 w-5 text-background" strokeWidth={2.5} />
+              ) : (
+                <LogIn className="h-5 w-5 text-background" strokeWidth={2.5} />
+              )}
             </button>
           </div>
 
@@ -173,17 +184,6 @@ const Index = () => {
           </motion.div>
 
           <div className="flex items-center gap-2 ml-auto relative z-10">
-            <button
-              onClick={handleAuthClick}
-              aria-label={authed ? "Logout" : "Login"}
-              className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center transition"
-            >
-              {authed ? (
-                <LogOut className="h-5 w-5 text-background" strokeWidth={2.5} />
-              ) : (
-                <LogIn className="h-5 w-5 text-background" strokeWidth={2.5} />
-              )}
-            </button>
             <Link
               to="/exchange"
               aria-label="Exchange"

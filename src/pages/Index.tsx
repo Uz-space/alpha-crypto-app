@@ -155,7 +155,24 @@ const Index = () => {
             </button>
           </div>
 
-          <div className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center gap-1">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            style={{ borderRadius: "14px" }}
+            className="absolute left-1/2 -translate-x-1/2 flex flex-col items-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
+          >
+            <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">Yangilandi</span>
+            <span className="flex items-center gap-1 text-[12px] font-semibold tabular-nums tracking-tight text-foreground/90 mt-0.5">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
+              </span>
+              {updatedAt ? updatedAt.toLocaleTimeString("uz-UZ") : "…"}
+            </span>
+          </motion.div>
+
+          <div className="flex items-center gap-2 ml-auto relative z-10">
             <button
               onClick={handleAuthClick}
               aria-label={authed ? "Logout" : "Login"}
@@ -167,26 +184,6 @@ const Index = () => {
                 <LogIn className="h-5 w-5 text-background" strokeWidth={2.5} />
               )}
             </button>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              style={{ borderRadius: "14px" }}
-              className="flex flex-col items-center leading-tight px-3 py-1.5 border border-white/10 bg-white/[0.04] backdrop-blur-md shadow-[0_4px_20px_-8px_rgba(0,0,0,0.5)]"
-            >
-              <span className="text-[8px] uppercase tracking-[0.2em] text-muted-foreground/70 font-medium">Yangilandi</span>
-              <span className="flex items-center gap-1 text-[12px] font-semibold tabular-nums tracking-tight text-foreground/90 mt-0.5">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
-                </span>
-                {updatedAt ? updatedAt.toLocaleTimeString("uz-UZ") : "…"}
-              </span>
-            </motion.div>
-          </div>
-
-          <div className="flex items-center gap-2">
             <Link
               to="/exchange"
               aria-label="Exchange"
@@ -196,6 +193,7 @@ const Index = () => {
             </Link>
             <DonateDialog />
           </div>
+
         </header>
 
         <section className="flex-1 flex flex-col justify-around rounded-2xl border border-white/10 bg-white/[0.03] backdrop-blur-xl shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)] px-4 py-2">

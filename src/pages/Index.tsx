@@ -148,6 +148,10 @@ const Index = () => {
     return () => { alive = false; controller?.abort(); clearInterval(id); };
   }, []);
 
+  if (!authChecked || !authed) {
+    return <main className="min-h-screen w-full bg-gradient-hero" />;
+  }
+
   return (
     <main className="min-h-screen w-full bg-gradient-hero flex">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">

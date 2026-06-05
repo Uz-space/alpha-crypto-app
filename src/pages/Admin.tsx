@@ -246,33 +246,50 @@ const Admin = () => {
                 <div>
                   <h2 className="text-sm font-semibold">Valyuta kurslari</h2>
                   <p className="text-[10px] text-muted-foreground/70 mt-0.5">
-                    Olish (user sotadi) va Sotish (user oladi) — 1 birlik = UZS
+                    Har bir valyuta uchun olish/sotish kursi va minimal miqdor
                   </p>
                 </div>
                 <Button size="sm" variant="outline" onClick={addR}><Plus className="h-3.5 w-3.5 mr-1" /> Qoʻshish</Button>
               </div>
-              <div className="grid grid-cols-[3rem_1fr_1fr_auto_auto] gap-2 text-[10px] uppercase tracking-wider text-muted-foreground/60 px-2 mb-1">
-                <div></div>
-                <div>Olish (Buy)</div>
-                <div>Sotish (Sell)</div>
-                <div></div>
-                <div></div>
-              </div>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {rates.map((r) => (
-                  <div key={r.id} className="grid grid-cols-[3rem_1fr_1fr_auto_auto] items-center gap-2 rounded-xl border border-white/5 bg-background/30 p-2">
-                    <div className="px-2 py-1.5 rounded-lg bg-foreground/10 text-xs font-semibold text-center">{r.symbol}</div>
-                    <Input type="number" value={r.buy_uzs} onChange={(e) => upR(r.id, "buy_uzs", Number(e.target.value))} className="tabular-nums" />
-                    <Input type="number" value={r.sell_uzs} onChange={(e) => upR(r.id, "sell_uzs", Number(e.target.value))} className="tabular-nums" />
-                    <Button size="sm" onClick={() => saveR(r)}><Save className="h-3.5 w-3.5" /></Button>
-                    {r.symbol !== "UZS" ? (
-                      <Button size="sm" variant="ghost" onClick={() => delR(r.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
-                    ) : <div className="w-9" />}
+                  <div key={r.id} className="rounded-xl border border-white/5 bg-background/30 p-3">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="px-2.5 py-1 rounded-lg bg-foreground/10 text-xs font-bold">{r.symbol}</div>
+                        <span className="text-[10px] text-muted-foreground/60">1 {r.symbol} = UZS</span>
+                      </div>
+                      <div className="flex gap-1.5">
+                        <Button size="sm" onClick={() => saveR(r)}><Save className="h-3.5 w-3.5" /></Button>
+                        {r.symbol !== "UZS" && (
+                          <Button size="sm" variant="ghost" onClick={() => delR(r.id)}><Trash2 className="h-3.5 w-3.5" /></Button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <div>
+                        <div className="text-[9px] uppercase tracking-wider text-muted-foreground/60 mb-1">Olish kursi (buy)</div>
+                        <Input type="number" value={r.buy_uzs} onChange={(e) => upR(r.id, "buy_uzs", Number(e.target.value))} className="tabular-nums h-9" />
+                      </div>
+                      <div>
+                        <div className="text-[9px] uppercase tracking-wider text-muted-foreground/60 mb-1">Sotish kursi (sell)</div>
+                        <Input type="number" value={r.sell_uzs} onChange={(e) => upR(r.id, "sell_uzs", Number(e.target.value))} className="tabular-nums h-9" />
+                      </div>
+                      <div>
+                        <div className="text-[9px] uppercase tracking-wider text-muted-foreground/60 mb-1">Min. olish</div>
+                        <Input type="number" value={r.min_buy} onChange={(e) => upR(r.id, "min_buy", Number(e.target.value))} className="tabular-nums h-9" />
+                      </div>
+                      <div>
+                        <div className="text-[9px] uppercase tracking-wider text-muted-foreground/60 mb-1">Min. sotish</div>
+                        <Input type="number" value={r.min_sell} onChange={(e) => upR(r.id, "min_sell", Number(e.target.value))} className="tabular-nums h-9" />
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
             </div>
           </TabsContent>
+
 
           {/* EXCHANGE WALLETS */}
           <TabsContent value="exch" className="mt-0">

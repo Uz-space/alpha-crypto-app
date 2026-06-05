@@ -77,6 +77,18 @@ const Exchange = () => {
   const validPair = (from === "UZS") !== (to === "UZS");
   const sendToWallet = useMemo(() => wallets.find((w) => w.symbol === from), [wallets, from]);
 
+  // Minimal limit hint
+  const cryptoSym = from === "UZS" ? to : from;
+  const cryptoRate = rates[cryptoSym];
+  const minHint = useMemo(() => {
+    if (!validPair || !cryptoRate) return null;
+    if (from === "UZS") {
+      // user buys crypto → min on crypto received
+      return cryptoRate.min_sell > 0 ? { amount: cryptoRate.min_sell, sym: cryptoSym, side: "to" as const } : null;
+    }
+    return cryptoRate.min_buy > 0 ? { amount: cryptoRate.min_buy, sym: cryptoSym, side: "from" as const } : null;
+  }, [from, validPair, cryptoRate, cryptoSym]);
+
   const copy = async () => {
     if (!sendToWallet?.address) return;
     await navigator.clipboard.writeText(sendToWallet.address);
@@ -87,9 +99,14 @@ const Exchange = () => {
   const submit = async () => {
     if (!validPair) return toast.error("Faqat crypto ↔ UZS");
     if (!fromAmount || !toAmount) return toast.error("Summalarni kiriting");
+    if (minHint) {
+      const check = minHint.side === "from" ? Number(fromAmount) : Number(toAmount);
+      if (check < minHint.amount) return toast.error(`Minimal: ${minHint.amount} ${minHint.sym}`);
+    }
     if (!receiveAddr.trim()) return toast.error("Qabul qilish manzilini kiriting");
     if (!file) return toast.error("Toʻlov screenshotini yuklang");
     if (!sendToWallet) return toast.error(`${from} uchun manzil yoʻq`);
+
 
     setSubmitting(true);
     try {

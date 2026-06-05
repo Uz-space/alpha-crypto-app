@@ -73,6 +73,7 @@ const Index = () => {
   const [data, setData] = useState<CoinData>({});
   const [updatedAt, setUpdatedAt] = useState<Date | null>(null);
   const [authed, setAuthed] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
   const lastClick = useRef<number>(0);
 
@@ -83,10 +84,18 @@ const Index = () => {
       referrer: document.referrer || null,
     }).then(() => {});
 
-    supabase.auth.getSession().then(({ data }) => setAuthed(!!data.session));
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => setAuthed(!!s));
+    supabase.auth.getSession().then(({ data }) => {
+      setAuthed(!!data.session);
+      setAuthChecked(true);
+      if (!data.session) navigate("/auth", { replace: true });
+    });
+    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setAuthed(!!s);
+      setAuthChecked(true);
+      if (!s) navigate("/auth", { replace: true });
+    });
     return () => sub.subscription.unsubscribe();
-  }, []);
+  }, [navigate]);
 
   const handleShieldClick = () => {
     const now = Date.now();
@@ -138,6 +147,10 @@ const Index = () => {
     const id = setInterval(run, 10000);
     return () => { alive = false; controller?.abort(); clearInterval(id); };
   }, []);
+
+  if (!authChecked || !authed) {
+    return <main className="min-h-screen w-full bg-gradient-hero" />;
+  }
 
   return (
     <main className="min-h-screen w-full bg-gradient-hero flex">

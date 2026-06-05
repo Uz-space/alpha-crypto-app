@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, ArrowRightLeft, LogIn, LogOut } from "lucide-react";
 import { DonateDialog } from "@/components/DonateDialog";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -197,6 +198,7 @@ const Index = () => {
           </motion.div>
 
           <div className="flex items-center gap-2 justify-end relative z-10">
+            <ThemeSwitcher />
             <Link
               to="/exchange"
               aria-label="Exchange"

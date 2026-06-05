@@ -31,7 +31,7 @@ const ASSETS: Asset[] = [
 ];
 
 interface ExchWallet { symbol: string; name: string; address: string; network: string | null; }
-interface Rate { symbol: string; buy_uzs: number; sell_uzs: number; }
+interface Rate { symbol: string; buy_uzs: number; sell_uzs: number; min_buy: number; min_sell: number; }
 
 const Exchange = () => {
   const [rates, setRates] = useState<Record<string, Rate>>({});

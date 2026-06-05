@@ -120,18 +120,18 @@ const Admin = () => {
   };
 
   // ----- Rates -----
-  const upR = (id: string, f: "buy_uzs" | "sell_uzs", v: number) =>
+  const upR = (id: string, f: "buy_uzs" | "sell_uzs" | "min_buy" | "min_sell", v: number) =>
     setRates(rs => rs.map(r => r.id===id ? {...r, [f]: v}:r));
   const saveR = async (r: Rate) => {
     const { error } = await supabase.from("exchange_rates")
-      .update({ buy_uzs: r.buy_uzs, sell_uzs: r.sell_uzs }).eq("id", r.id);
-    error ? toast.error(error.message) : toast.success(`${r.symbol} kursi yangilandi`);
+      .update({ buy_uzs: r.buy_uzs, sell_uzs: r.sell_uzs, min_buy: r.min_buy, min_sell: r.min_sell }).eq("id", r.id);
+    error ? toast.error(error.message) : toast.success(`${r.symbol} yangilandi`);
   };
   const addR = async () => {
     const sym = prompt("Valyuta belgisi (masalan: BTC)")?.trim().toUpperCase();
     if (!sym) return;
     const { error } = await supabase.from("exchange_rates")
-      .insert({ symbol: sym, buy_uzs: 0, sell_uzs: 0, price_uzs: 0, sort_order: 99 });
+      .insert({ symbol: sym, buy_uzs: 0, sell_uzs: 0, min_buy: 0, min_sell: 0, price_uzs: 0, sort_order: 99 });
     if (error) toast.error(error.message);
     else await loadAll();
   };

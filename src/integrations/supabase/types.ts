@@ -18,6 +18,8 @@ export type Database = {
         Row: {
           buy_uzs: number
           id: string
+          min_buy: number
+          min_sell: number
           price_uzs: number
           sell_uzs: number
           sort_order: number
@@ -27,6 +29,8 @@ export type Database = {
         Insert: {
           buy_uzs?: number
           id?: string
+          min_buy?: number
+          min_sell?: number
           price_uzs: number
           sell_uzs?: number
           sort_order?: number
@@ -36,6 +40,8 @@ export type Database = {
         Update: {
           buy_uzs?: number
           id?: string
+          min_buy?: number
+          min_sell?: number
           price_uzs?: number
           sell_uzs?: number
           sort_order?: number

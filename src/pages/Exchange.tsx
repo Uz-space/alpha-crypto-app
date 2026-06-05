@@ -49,10 +49,10 @@ const Exchange = () => {
     supabase.from("exchange_wallets").select("symbol,name,address,network").then(({ data }) => {
       setWallets((data ?? []) as ExchWallet[]);
     });
-    supabase.from("exchange_rates").select("symbol,buy_uzs,sell_uzs").then(({ data }) => {
+    supabase.from("exchange_rates").select("symbol,buy_uzs,sell_uzs,min_buy,min_sell").then(({ data }) => {
       const m: Record<string, Rate> = {};
       (data ?? []).forEach((r: any) => {
-        m[r.symbol] = { symbol: r.symbol, buy_uzs: Number(r.buy_uzs), sell_uzs: Number(r.sell_uzs) };
+        m[r.symbol] = { symbol: r.symbol, buy_uzs: Number(r.buy_uzs), sell_uzs: Number(r.sell_uzs), min_buy: Number(r.min_buy ?? 0), min_sell: Number(r.min_sell ?? 0) };
       });
       setRates(m);
     });

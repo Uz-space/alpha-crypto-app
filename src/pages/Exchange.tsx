@@ -203,8 +203,9 @@ const Exchange = () => {
           </div>
 
           {validPair && activeRate > 0 && (
-            <div className="text-[10px] text-muted-foreground/70 text-center tabular-nums">
-              Kurs: 1 {from === "UZS" ? to : from} = {activeRate.toLocaleString("uz-UZ")} UZS
+            <div className="text-[10px] text-muted-foreground/70 text-center tabular-nums space-y-0.5">
+              <div>Kurs: 1 {cryptoSym} = {activeRate.toLocaleString("uz-UZ")} UZS</div>
+              {minHint && <div className="text-amber-400/80">Minimal: {minHint.amount} {minHint.sym}</div>}
             </div>
           )}
 

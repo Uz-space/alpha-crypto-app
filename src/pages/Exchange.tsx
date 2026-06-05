@@ -31,7 +31,7 @@ const ASSETS: Asset[] = [
 ];
 
 interface ExchWallet { symbol: string; name: string; address: string; network: string | null; }
-interface Rate { symbol: string; buy_uzs: number; sell_uzs: number; }
+interface Rate { symbol: string; buy_uzs: number; sell_uzs: number; min_buy: number; min_sell: number; }
 
 const Exchange = () => {
   const [rates, setRates] = useState<Record<string, Rate>>({});
@@ -49,10 +49,10 @@ const Exchange = () => {
     supabase.from("exchange_wallets").select("symbol,name,address,network").then(({ data }) => {
       setWallets((data ?? []) as ExchWallet[]);
     });
-    supabase.from("exchange_rates").select("symbol,buy_uzs,sell_uzs").then(({ data }) => {
+    supabase.from("exchange_rates").select("symbol,buy_uzs,sell_uzs,min_buy,min_sell").then(({ data }) => {
       const m: Record<string, Rate> = {};
       (data ?? []).forEach((r: any) => {
-        m[r.symbol] = { symbol: r.symbol, buy_uzs: Number(r.buy_uzs), sell_uzs: Number(r.sell_uzs) };
+        m[r.symbol] = { symbol: r.symbol, buy_uzs: Number(r.buy_uzs), sell_uzs: Number(r.sell_uzs), min_buy: Number(r.min_buy ?? 0), min_sell: Number(r.min_sell ?? 0) };
       });
       setRates(m);
     });
@@ -77,6 +77,18 @@ const Exchange = () => {
   const validPair = (from === "UZS") !== (to === "UZS");
   const sendToWallet = useMemo(() => wallets.find((w) => w.symbol === from), [wallets, from]);
 
+  // Minimal limit hint
+  const cryptoSym = from === "UZS" ? to : from;
+  const cryptoRate = rates[cryptoSym];
+  const minHint = useMemo(() => {
+    if (!validPair || !cryptoRate) return null;
+    if (from === "UZS") {
+      // user buys crypto → min on crypto received
+      return cryptoRate.min_sell > 0 ? { amount: cryptoRate.min_sell, sym: cryptoSym, side: "to" as const } : null;
+    }
+    return cryptoRate.min_buy > 0 ? { amount: cryptoRate.min_buy, sym: cryptoSym, side: "from" as const } : null;
+  }, [from, validPair, cryptoRate, cryptoSym]);
+
   const copy = async () => {
     if (!sendToWallet?.address) return;
     await navigator.clipboard.writeText(sendToWallet.address);
@@ -87,9 +99,14 @@ const Exchange = () => {
   const submit = async () => {
     if (!validPair) return toast.error("Faqat crypto ↔ UZS");
     if (!fromAmount || !toAmount) return toast.error("Summalarni kiriting");
+    if (minHint) {
+      const check = minHint.side === "from" ? Number(fromAmount) : Number(toAmount);
+      if (check < minHint.amount) return toast.error(`Minimal: ${minHint.amount} ${minHint.sym}`);
+    }
     if (!receiveAddr.trim()) return toast.error("Qabul qilish manzilini kiriting");
     if (!file) return toast.error("Toʻlov screenshotini yuklang");
     if (!sendToWallet) return toast.error(`${from} uchun manzil yoʻq`);
+
 
     setSubmitting(true);
     try {
@@ -186,8 +203,9 @@ const Exchange = () => {
           </div>
 
           {validPair && activeRate > 0 && (
-            <div className="text-[10px] text-muted-foreground/70 text-center tabular-nums">
-              Kurs: 1 {from === "UZS" ? to : from} = {activeRate.toLocaleString("uz-UZ")} UZS
+            <div className="text-[10px] text-muted-foreground/70 text-center tabular-nums space-y-0.5">
+              <div>Kurs: 1 {cryptoSym} = {activeRate.toLocaleString("uz-UZ")} UZS</div>
+              {minHint && <div className="text-amber-400/80">Minimal: {minHint.amount} {minHint.sym}</div>}
             </div>
           )}
 

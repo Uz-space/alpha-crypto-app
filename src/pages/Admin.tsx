@@ -12,7 +12,7 @@ import {
 
 interface Wallet { id: string; name: string; symbol: string; address: string; color: string; sort_order: number; }
 interface ExchWallet { id: string; name: string; symbol: string; address: string; network: string | null; sort_order: number; }
-interface Rate { id: string; symbol: string; buy_uzs: number; sell_uzs: number; sort_order: number; }
+interface Rate { id: string; symbol: string; buy_uzs: number; sell_uzs: number; min_buy: number; min_sell: number; sort_order: number; }
 interface AppUser {
   id: string; username: string; email: string; last_sign_in_at: string | null;
   created_at: string; total_logins: number; today_logins: number; roles: string[];

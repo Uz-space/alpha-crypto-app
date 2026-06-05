@@ -198,6 +198,7 @@ const Index = () => {
           </motion.div>
 
           <div className="flex items-center gap-2 justify-end relative z-10">
+            <ThemeSwitcher />
             <Link
               to="/exchange"
               aria-label="Exchange"

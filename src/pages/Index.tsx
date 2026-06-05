@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Shield, ArrowRightLeft, LogIn, LogOut } from "lucide-react";
 import { DonateDialog } from "@/components/DonateDialog";
+import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 

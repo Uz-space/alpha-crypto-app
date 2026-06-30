@@ -165,7 +165,7 @@ const Index = () => {
               onClick={handleShieldClick}
               onContextMenu={(e) => e.preventDefault()}
               aria-label="Shield"
-              className="relative h-11 w-11 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
+              className="relative h-9 w-9 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
@@ -194,7 +194,7 @@ const Index = () => {
             <Link
               to="/exchange"
               aria-label="Exchange"
-              className="h-11 w-11 rounded-full bg-foreground flex items-center justify-center transition"
+              className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center transition"
             >
               <ArrowRightLeft className="h-5 w-5 text-background" strokeWidth={2.5} />
             </Link>

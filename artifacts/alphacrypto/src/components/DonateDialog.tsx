@@ -39,7 +39,7 @@ export const DonateDialog = () => {
           whileTap={{ scale: 0.94 }}
           aria-label="Yordam berish"
           title="Yordam berish"
-          className="group relative inline-flex items-center justify-center h-11 w-11 rounded-full bg-foreground text-background shadow-glow transition-shadow hover:shadow-[0_0_30px_hsl(0_0%_100%/0.3)]"
+          className="group relative inline-flex items-center justify-center h-9 w-9 rounded-full bg-foreground text-background shadow-glow transition-shadow hover:shadow-[0_0_30px_hsl(0_0%_100%/0.3)]"
         >
           <span className="text-lg leading-none">🎁</span>
         </motion.button>

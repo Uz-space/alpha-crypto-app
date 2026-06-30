@@ -160,12 +160,12 @@ const Index = () => {
     <main className="min-h-screen w-full bg-gradient-hero flex">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
         <header className="grid grid-cols-3 items-center pb-4 gap-3">
-          <div className="flex items-center gap-2 justify-end relative z-10">
+          <div className="flex items-center gap-2 relative z-10">
             <button
               onClick={handleShieldClick}
               onContextMenu={(e) => e.preventDefault()}
               aria-label="Shield"
-              className="relative h-9 w-9 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
+              className="relative h-11 w-11 rounded-full bg-foreground flex items-center justify-center select-none touch-none"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
@@ -190,11 +190,11 @@ const Index = () => {
             </span>
           </motion.div>
 
-          <div className="flex items-center gap-2 justify-start relative z-10">
+          <div className="flex items-center gap-2 justify-end relative z-10">
             <Link
               to="/exchange"
               aria-label="Exchange"
-              className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center transition"
+              className="h-11 w-11 rounded-full bg-foreground flex items-center justify-center transition"
             >
               <ArrowRightLeft className="h-5 w-5 text-background" strokeWidth={2.5} />
             </Link>

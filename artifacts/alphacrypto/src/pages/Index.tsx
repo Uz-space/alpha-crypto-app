@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Shield, ArrowRightLeft, LogIn, LogOut } from "lucide-react";
+import { Shield, ArrowRightLeft } from "lucide-react";
 import { DonateDialog } from "@/components/DonateDialog";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { supabase } from "@/integrations/supabase/client";
@@ -77,6 +77,7 @@ const Index = () => {
   const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
   const lastClick = useRef<number>(0);
+  const singleClickTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     supabase.from("visits").insert({
@@ -100,20 +101,22 @@ const Index = () => {
 
   const handleShieldClick = () => {
     const now = Date.now();
-    if (now - lastClick.current < 500) {
+    if (now - lastClick.current < 400) {
+      // Double click → admin
+      if (singleClickTimer.current) {
+        clearTimeout(singleClickTimer.current);
+        singleClickTimer.current = null;
+      }
       lastClick.current = 0;
       navigate("/auth?admin=1");
     } else {
       lastClick.current = now;
-    }
-  };
-
-  const handleAuthClick = async () => {
-    if (authed) {
-      await supabase.auth.signOut();
-      toast.success("Tizimdan chiqdingiz");
-    } else {
-      navigate("/auth");
+      // Single click → logout after delay (to allow double-click detection)
+      singleClickTimer.current = setTimeout(async () => {
+        singleClickTimer.current = null;
+        await supabase.auth.signOut();
+        toast.success("Tizimdan chiqdingiz");
+      }, 420);
     }
   };
 
@@ -166,17 +169,6 @@ const Index = () => {
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
-            </button>
-            <button
-              onClick={handleAuthClick}
-              aria-label={authed ? "Logout" : "Login"}
-              className="h-9 w-9 rounded-full bg-foreground flex items-center justify-center transition"
-            >
-              {authed ? (
-                <LogOut className="h-5 w-5 text-background" strokeWidth={2.5} />
-              ) : (
-                <LogIn className="h-5 w-5 text-background" strokeWidth={2.5} />
-              )}
             </button>
           </div>
 

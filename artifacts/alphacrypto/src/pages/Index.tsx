@@ -160,7 +160,7 @@ const Index = () => {
     <main className="min-h-screen w-full bg-gradient-hero flex">
       <div className="mx-auto max-w-2xl w-full flex flex-col px-5 py-6">
         <header className="grid grid-cols-3 items-center pb-4 gap-3">
-          <div className="flex items-center gap-2 relative z-10">
+          <div className="flex items-center gap-2 justify-end relative z-10">
             <button
               onClick={handleShieldClick}
               onContextMenu={(e) => e.preventDefault()}
@@ -190,7 +190,7 @@ const Index = () => {
             </span>
           </motion.div>
 
-          <div className="flex items-center gap-2 justify-end relative z-10">
+          <div className="flex items-center gap-2 justify-start relative z-10">
             <Link
               to="/exchange"
               aria-label="Exchange"

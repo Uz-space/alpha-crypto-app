@@ -22,7 +22,7 @@ export const ThemeSwitcher = () => {
       <DialogTrigger asChild>
         <button
           aria-label="Theme"
-          className="h-10 w-10 rounded-full bg-foreground flex items-center justify-center transition"
+          className="h-[38px] w-[38px] rounded-full bg-foreground flex items-center justify-center transition"
         >
           <Palette className="h-5 w-5 text-background" strokeWidth={2.5} />
         </button>

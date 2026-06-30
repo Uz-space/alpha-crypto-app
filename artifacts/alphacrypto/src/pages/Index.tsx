@@ -170,6 +170,7 @@ const Index = () => {
             >
               <Shield className="h-5 w-5 text-background" strokeWidth={2.5} />
             </button>
+            <ThemeSwitcher />
           </div>
 
           <motion.div
@@ -190,7 +191,6 @@ const Index = () => {
           </motion.div>
 
           <div className="flex items-center gap-2 justify-end relative z-10">
-            <ThemeSwitcher />
             <Link
               to="/exchange"
               aria-label="Exchange"

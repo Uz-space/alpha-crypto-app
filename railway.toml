@@ -1,5 +1,5 @@
 [build]
-buildCommand = "pnpm install --frozen-lockfile && pnpm --filter @workspace/alphacrypto run build"
+buildCommand = "pnpm install && pnpm --filter @workspace/alphacrypto run build"
 
 [deploy]
-startCommand = "npx serve -s artifacts/alphacrypto/dist/public -l tcp://0.0.0.0:$PORT"
+startCommand = "npx serve -s artifacts/alphacrypto/dist/public -l $PORT"

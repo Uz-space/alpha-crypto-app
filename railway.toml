@@ -1,5 +1,5 @@
 [build]
-buildCommand = "pnpm install && pnpm --filter @workspace/alphacrypto run build"
+buildCommand = "printf 'VITE_SUPABASE_URL=https://ruvhpmzdmexycubxzfrc.supabase.co\nVITE_SUPABASE_PUBLISHABLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJ1dmhwbXpkbWV4eWN1Ynh6ZnJjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzgxMzE1MjAsImV4cCI6MjA5MzcwNzUyMH0.QMFiKXMUchAHVnJO__hzUvCZHtTArsGEf62y-rHuPts\n' > artifacts/alphacrypto/.env && pnpm install && pnpm --filter @workspace/alphacrypto run build"
 
 [deploy]
 startCommand = "npx serve -s artifacts/alphacrypto/dist/public -l $PORT"
